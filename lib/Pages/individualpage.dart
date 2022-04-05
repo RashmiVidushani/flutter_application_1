@@ -49,13 +49,12 @@ class _IndividualPageState extends State<IndividualPage> {
     });
     socket.connect();
     socket.emit("signin", widget.sourceChat!.id);
-    socket.onConnect((data) {
-      print("connected");
-      socket.on("message", (msg) {
-        print(msg);
-        setMessage("destination", msg["message"]);
-      });
+    socket.onConnect((data) => print("connected"));
+    socket.on("message", (msg) {
+      print(msg);
+      setMessage("destination", msg["message"]);
     });
+
     print(socket.connected);
   }
 
