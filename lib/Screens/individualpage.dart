@@ -11,11 +11,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class IndividualPage extends StatefulWidget {
-  const IndividualPage({Key? key, this.chatModel, this.sourceChat})
+  const IndividualPage({Key? key, this.chatModel, this.sourceChat, this.time})
       : super(key: key);
   final ChatModel? chatModel;
   final ChatModel? sourceChat;
-
+  final String? time;
   @override
   State<IndividualPage> createState() => _IndividualPageState();
 }
@@ -24,6 +24,7 @@ class _IndividualPageState extends State<IndividualPage> {
   bool show = false;
   FocusNode focusNode = FocusNode();
   TextEditingController _controller = TextEditingController();
+  ScrollController _scrollController = ScrollController();
   late IO.Socket socket;
   bool sendButton = false;
 
@@ -53,6 +54,8 @@ class _IndividualPageState extends State<IndividualPage> {
     socket.on("message", (msg) {
       print(msg);
       setMessage("destination", msg["message"]);
+      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     });
 
     print(socket.connected);
@@ -65,7 +68,10 @@ class _IndividualPageState extends State<IndividualPage> {
   }
 
   void setMessage(String type, String message) {
-    MessageModel messageModel = MessageModel(type: type, message: message);
+    MessageModel messageModel = MessageModel(
+        type: type,
+        message: message,
+        time: DateTime.now().toString().substring(10, 16));
     setState(() {
       setState(() {
         messages.add(messageModel);
@@ -181,120 +187,144 @@ class _IndividualPageState extends State<IndividualPage> {
                 }
                 return Future.value(false);
               },
-              child: Stack(
+              child: Column(
                 children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height - 140,
+                  Expanded(
                     child: ListView.builder(
+                        controller: _scrollController,
                         shrinkWrap: true,
-                        itemCount: messages.length,
+                        itemCount: messages.length + 1,
                         itemBuilder: (context, index) {
+                          if (index == messages.length) {
+                            return Container(
+                              height: 70,
+                            );
+                          }
                           if (messages[index].type == "source") {
                             return OwnMessage(
-                              message: messages[index].message,
-                            );
+                                message: messages[index].message,
+                                time: messages[index].time);
                           } else {
-                            return ReplyCard(message: messages[index].message);
+                            return ReplyCard(
+                                message: messages[index].message,
+                                time: messages[index].time);
                           }
                         }),
                   ),
                   Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Row(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: 70,
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width - 55,
-                                child: Card(
-                                    margin: EdgeInsets.only(
-                                        left: 2, right: 2, bottom: 8),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(25)),
-                                    child: TextFormField(
-                                      focusNode: focusNode,
-                                      textAlignVertical:
-                                          TextAlignVertical.center,
-                                      keyboardType: TextInputType.multiline,
-                                      maxLines: 5,
-                                      minLines: 1,
-                                      onChanged: (value) {
-                                        if (value.length > 0) {
-                                          setState(() {
-                                            sendButton = true;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            sendButton = false;
-                                          });
-                                        }
-                                      },
-                                      controller: _controller,
-                                      decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          hintText: "type a message",
-                                          contentPadding: EdgeInsets.all(5),
-                                          prefixIcon: IconButton(
-                                            icon: Icon(Icons.emoji_emotions),
-                                            onPressed: () {
-                                              focusNode.unfocus();
-                                              focusNode.canRequestFocus = false;
+                              Row(
+                                children: [
+                                  Container(
+                                    width:
+                                        MediaQuery.of(context).size.width - 55,
+                                    child: Card(
+                                        margin: EdgeInsets.only(
+                                            left: 2, right: 2, bottom: 8),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(25)),
+                                        child: TextFormField(
+                                          focusNode: focusNode,
+                                          textAlignVertical:
+                                              TextAlignVertical.center,
+                                          keyboardType: TextInputType.multiline,
+                                          maxLines: 5,
+                                          minLines: 1,
+                                          onChanged: (value) {
+                                            if (value.length > 0) {
                                               setState(() {
-                                                show = !show;
+                                                sendButton = true;
                                               });
-                                            },
-                                          ),
-                                          suffixIcon: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              IconButton(
-                                                  onPressed: () {
-                                                    showModalBottomSheet(
-                                                        backgroundColor:
-                                                            Colors.transparent,
-                                                        context: context,
-                                                        builder: (builder) =>
-                                                            bottomsheet());
-                                                  },
-                                                  icon:
-                                                      Icon(Icons.attach_file)),
-                                              IconButton(
-                                                  onPressed: () {},
-                                                  icon: Icon(Icons.camera_alt))
-                                            ],
-                                          )),
-                                    )),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    bottom: 8, right: 2, left: 2),
-                                child: CircleAvatar(
-                                  radius: 25,
-                                  backgroundColor:
-                                      Color.fromARGB(210, 165, 171, 214),
-                                  child: IconButton(
-                                    icon: Icon(
-                                        sendButton ? Icons.send : Icons.mic),
-                                    onPressed: () {
-                                      if (sendButton) {
-                                        sendMessage(
-                                            _controller.text,
-                                            widget.sourceChat!.id!,
-                                            widget.chatModel!.id!);
-                                        _controller.clear();
-                                      }
-                                    },
-                                    color: Colors.white,
+                                            } else {
+                                              setState(() {
+                                                sendButton = false;
+                                              });
+                                            }
+                                          },
+                                          controller: _controller,
+                                          decoration: InputDecoration(
+                                              border: InputBorder.none,
+                                              hintText: "type a message",
+                                              contentPadding: EdgeInsets.all(5),
+                                              prefixIcon: IconButton(
+                                                icon:
+                                                    Icon(Icons.emoji_emotions),
+                                                onPressed: () {
+                                                  focusNode.unfocus();
+                                                  focusNode.canRequestFocus =
+                                                      false;
+                                                  setState(() {
+                                                    show = !show;
+                                                  });
+                                                },
+                                              ),
+                                              suffixIcon: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  IconButton(
+                                                      onPressed: () {
+                                                        showModalBottomSheet(
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            context: context,
+                                                            builder: (builder) =>
+                                                                bottomsheet());
+                                                      },
+                                                      icon: Icon(
+                                                          Icons.attach_file)),
+                                                  IconButton(
+                                                      onPressed: () {},
+                                                      icon: Icon(
+                                                          Icons.camera_alt))
+                                                ],
+                                              )),
+                                        )),
                                   ),
-                                ),
-                              )
-                            ],
-                          ),
-                          show ? emojiSelect() : Container()
-                        ]),
-                  )
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: 8, right: 2, left: 2),
+                                    child: CircleAvatar(
+                                      radius: 25,
+                                      backgroundColor:
+                                          Color.fromARGB(210, 165, 171, 214),
+                                      child: IconButton(
+                                        icon: Icon(sendButton
+                                            ? Icons.send
+                                            : Icons.mic),
+                                        onPressed: () {
+                                          if (sendButton) {
+                                            _scrollController.animateTo(
+                                                _scrollController
+                                                    .position.maxScrollExtent,
+                                                duration:
+                                                    Duration(milliseconds: 300),
+                                                curve: Curves.easeOut);
+                                            sendMessage(
+                                                _controller.text,
+                                                widget.sourceChat!.id!,
+                                                widget.chatModel!.id!);
+                                            _controller.clear();
+                                            setState(() {
+                                              sendButton = false;
+                                            });
+                                          }
+                                        },
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              show ? emojiSelect() : Container()
+                            ]),
+                      ))
                 ],
               ),
             ),

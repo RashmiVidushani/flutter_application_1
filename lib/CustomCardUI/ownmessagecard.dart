@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class OwnMessage extends StatelessWidget {
-  const OwnMessage({Key? key, this.message}) : super(key: key);
+  const OwnMessage({Key? key, this.message, this.time}) : super(key: key);
   final String? message;
+  final String? time;
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -36,7 +37,7 @@ class OwnMessage extends StatelessWidget {
                       right: 10,
                       child: Row(
                         children: [
-                          Text("12:23",
+                          Text(time!,
                               style: TextStyle(
                                   fontSize: 13, color: Colors.grey[600])),
                           Icon(

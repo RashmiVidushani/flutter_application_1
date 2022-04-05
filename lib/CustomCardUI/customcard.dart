@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Model/chatmodel.dart';
-import 'package:flutter_application_1/Pages/individualpage.dart';
+import 'package:flutter_application_1/Screens/individualpage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomCard extends StatelessWidget {
