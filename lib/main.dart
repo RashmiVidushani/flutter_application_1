@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/NewScreen/landingscreen.dart';
 import 'package:flutter_application_1/Screens/camarascreen.dart';
 import 'package:flutter_application_1/Screens/homescreen.dart';
 import 'package:flutter_application_1/Screens/loginscreen.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LoginScreen(),
+      home: const LandingScreen(),
     );
   }
 }
