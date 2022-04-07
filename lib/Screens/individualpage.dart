@@ -7,7 +7,10 @@ import 'package:flutter_application_1/CustomCardUI/replycard.dart';
 import 'package:flutter_application_1/Model/chatmodel.dart';
 import 'package:flutter_application_1/Model/chatmodel.dart';
 import 'package:flutter_application_1/Model/messagemodel.dart';
+import 'package:flutter_application_1/Screens/camarascreen.dart';
+import 'package:flutter_application_1/Screens/cameraview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class IndividualPage extends StatefulWidget {
@@ -27,7 +30,8 @@ class _IndividualPageState extends State<IndividualPage> {
   ScrollController _scrollController = ScrollController();
   late IO.Socket socket;
   bool sendButton = false;
-
+  ImagePicker _picker = ImagePicker();
+  XFile? file;
   List<MessageModel> messages = [];
 
   @override
@@ -280,7 +284,14 @@ class _IndividualPageState extends State<IndividualPage> {
                                                       icon: Icon(
                                                           Icons.attach_file)),
                                                   IconButton(
-                                                      onPressed: () {},
+                                                      onPressed: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (builder) =>
+                                                                        CamaraScreen()));
+                                                      },
                                                       icon: Icon(
                                                           Icons.camera_alt))
                                                 ],
@@ -346,16 +357,29 @@ class _IndividualPageState extends State<IndividualPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  iconCreation(
-                      Icons.insert_drive_file, Colors.indigo, "Document "),
+                  iconCreation(Icons.insert_drive_file, Colors.indigo,
+                      "Document ", () {}),
                   SizedBox(
                     width: 40,
                   ),
-                  iconCreation(Icons.camera, Colors.pink, "Camera "),
+                  iconCreation(Icons.camera, Colors.pink, "Camera ", () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => CamaraScreen()));
+                  }),
                   SizedBox(
                     width: 40,
                   ),
-                  iconCreation(Icons.insert_photo, Colors.purple, "Gallery"),
+                  iconCreation(Icons.insert_photo, Colors.purple, "Gallery",
+                      () async {
+                    file = await _picker.pickImage(source: ImageSource.gallery);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) =>
+                                CameraView(path: file!.path)));
+                  }),
                 ],
               ),
               SizedBox(
@@ -364,15 +388,16 @@ class _IndividualPageState extends State<IndividualPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  iconCreation(Icons.headset, Colors.orange, "Audio "),
+                  iconCreation(Icons.headset, Colors.orange, "Audio ", () {}),
                   SizedBox(
                     width: 40,
                   ),
-                  iconCreation(Icons.location_pin, Colors.yellow, "Location"),
+                  iconCreation(
+                      Icons.location_pin, Colors.yellow, "Location", () {}),
                   SizedBox(
                     width: 40,
                   ),
-                  iconCreation(Icons.person, Colors.blue, "Contact"),
+                  iconCreation(Icons.person, Colors.blue, "Contact", () {}),
                 ],
               )
             ]),
@@ -380,9 +405,10 @@ class _IndividualPageState extends State<IndividualPage> {
     );
   }
 
-  Widget iconCreation(IconData icon, Color color, String text) {
+  Widget iconCreation(
+      IconData icon, Color color, String text, VoidCallback onTap) {
     return InkWell(
-        onTap: () {},
+        onTap: onTap,
         child: Column(
           children: [
             CircleAvatar(
@@ -418,4 +444,3 @@ class _IndividualPageState extends State<IndividualPage> {
   }
 }
 //flutter run --no-sound-null-safety
-//Flutter: Let's implement one to one chat functionality (Pt-2) using Socket IO || WhatsApp Clone #20
