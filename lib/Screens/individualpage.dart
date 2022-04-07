@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'package:emoji_picker_2/emoji_picker_2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/CustomCardUI/ownfilecard.dart';
 import 'package:flutter_application_1/CustomCardUI/ownmessagecard.dart';
 import 'package:flutter_application_1/CustomCardUI/replycard.dart';
+import 'package:flutter_application_1/CustomCardUI/replyfilecard.dart';
 import 'package:flutter_application_1/Model/chatmodel.dart';
 import 'package:flutter_application_1/Model/chatmodel.dart';
 import 'package:flutter_application_1/Model/messagemodel.dart';
@@ -57,7 +59,11 @@ class _IndividualPageState extends State<IndividualPage> {
     socket.onConnect((data) => print("connected"));
     socket.on("message", (msg) {
       print(msg);
-      setMessage("destination", msg["message"]);
+      setMessage(
+        "destination",
+        msg["message"],
+        msg["path"],
+      );
       _scrollController.animateTo(_scrollController.position.maxScrollExtent,
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     });
@@ -65,16 +71,21 @@ class _IndividualPageState extends State<IndividualPage> {
     print(socket.connected);
   }
 
-  void sendMessage(String message, int sourceId, int targetId) {
-    setMessage("source", message);
-    socket.emit("message",
-        {"message": message, "sourceId": sourceId, "targetId": targetId});
+  void sendMessage(String message, int sourceId, int targetId, String path) {
+    setMessage("source", message, path);
+    socket.emit("message", {
+      "message": message,
+      "sourceId": sourceId,
+      "targetId": targetId,
+      "path": path
+    });
   }
 
-  void setMessage(String type, String message) {
+  void setMessage(String type, String message, String path) {
     MessageModel messageModel = MessageModel(
         type: type,
         message: message,
+        path: path,
         time: DateTime.now().toString().substring(10, 16));
     setState(() {
       setState(() {
@@ -320,7 +331,8 @@ class _IndividualPageState extends State<IndividualPage> {
                                             sendMessage(
                                                 _controller.text,
                                                 widget.sourceChat!.id!,
-                                                widget.chatModel!.id!);
+                                                widget.chatModel!.id!,
+                                                "");
                                             _controller.clear();
                                             setState(() {
                                               sendButton = false;
@@ -374,11 +386,8 @@ class _IndividualPageState extends State<IndividualPage> {
                   iconCreation(Icons.insert_photo, Colors.purple, "Gallery",
                       () async {
                     file = await _picker.pickImage(source: ImageSource.gallery);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (builder) =>
-                                CameraView(path: file!.path)));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (builder) => CameraView()));
                   }),
                 ],
               ),

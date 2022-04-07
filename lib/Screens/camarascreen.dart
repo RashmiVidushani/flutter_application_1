@@ -158,7 +158,7 @@ class _CamaraScreenState extends State<CamaraScreen> {
         context,
         MaterialPageRoute(
             builder: (builder) => CameraView(
-                  path: file.path,
+                //path: file.path,
                 )));
   }
 }
