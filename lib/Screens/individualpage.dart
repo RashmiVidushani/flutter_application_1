@@ -94,6 +94,10 @@ class _IndividualPageState extends State<IndividualPage> {
     });
   }
 
+  void onImageSend(String path) {
+    print("working $path");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -299,9 +303,10 @@ class _IndividualPageState extends State<IndividualPage> {
                                                         Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                                builder:
-                                                                    (builder) =>
-                                                                        CamaraScreen()));
+                                                                builder: (builder) =>
+                                                                    CamaraScreen(
+                                                                        onImageSend:
+                                                                            onImageSend)));
                                                       },
                                                       icon: Icon(
                                                           Icons.camera_alt))
@@ -378,7 +383,9 @@ class _IndividualPageState extends State<IndividualPage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (builder) => CamaraScreen()));
+                            builder: (builder) => CamaraScreen(
+                                  onImageSend: onImageSend,
+                                )));
                   }),
                   SizedBox(
                     width: 40,
@@ -386,8 +393,13 @@ class _IndividualPageState extends State<IndividualPage> {
                   iconCreation(Icons.insert_photo, Colors.purple, "Gallery",
                       () async {
                     file = await _picker.pickImage(source: ImageSource.gallery);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (builder) => CameraView()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => CameraView(
+                                  path: file!.path,
+                                  onImageSend: onImageSend,
+                                )));
                   }),
                 ],
               ),
@@ -453,3 +465,5 @@ class _IndividualPageState extends State<IndividualPage> {
   }
 }
 //flutter run --no-sound-null-safety
+
+//Flutter - Let's Share one to one Images on our chat app (part -4) || ChatApp #33

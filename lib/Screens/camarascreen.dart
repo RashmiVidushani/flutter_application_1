@@ -10,8 +10,8 @@ import 'package:path_provider/path_provider.dart';
 late List<CameraDescription> cameras;
 
 class CamaraScreen extends StatefulWidget {
-  const CamaraScreen({Key? key}) : super(key: key);
-
+  const CamaraScreen({Key? key, this.onImageSend}) : super(key: key);
+  final Function? onImageSend;
   @override
   State<CamaraScreen> createState() => _CamaraScreenState();
 }
@@ -155,11 +155,14 @@ class _CamaraScreenState extends State<CamaraScreen> {
   void takePhoto(BuildContext context) async {
     XFile file = await _cameraController.takePicture();
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (builder) => CameraView(
-                //path: file.path,
-                )));
+      context,
+      MaterialPageRoute(
+        builder: (builder) => CameraView(
+          path: file.path,
+          onImageSend: widget.onImageSend,
+        ),
+      ),
+    );
   }
 }
 //12

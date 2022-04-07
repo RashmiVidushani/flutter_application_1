@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 class CameraView extends StatelessWidget {
   const CameraView({
     Key? key,
+    required this.path,
+    this.onImageSend,
   }) : super(key: key);
-
+  final String path;
+  final Function? onImageSend;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,11 +72,15 @@ class CameraView extends StatelessWidget {
                             color: Colors.white, size: 27),
                         border: InputBorder.none,
                         hintStyle: TextStyle(color: Colors.white, fontSize: 17),
-                        suffixIcon: CircleAvatar(
-                          radius: 27,
-                          backgroundColor: Colors.tealAccent[700],
-                          child: Icon(Icons.check, color: Colors.white),
-                        )),
+                        suffixIcon: InkWell(
+                            onTap: () {
+                              onImageSend!(path);
+                            },
+                            child: CircleAvatar(
+                              radius: 27,
+                              backgroundColor: Colors.tealAccent[700],
+                              child: Icon(Icons.check, color: Colors.white),
+                            ))),
                   ),
                 ))
           ],
