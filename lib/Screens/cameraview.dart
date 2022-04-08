@@ -10,6 +10,7 @@ class CameraView extends StatelessWidget {
   }) : super(key: key);
   final String path;
   final Function? onImageSend;
+  static TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +75,7 @@ class CameraView extends StatelessWidget {
                         hintStyle: TextStyle(color: Colors.white, fontSize: 17),
                         suffixIcon: InkWell(
                             onTap: () {
-                              onImageSend!(path);
+                              onImageSend!(path, _controller.text.trim());
                             },
                             child: CircleAvatar(
                               radius: 27,
