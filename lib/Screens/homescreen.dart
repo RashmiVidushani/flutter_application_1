@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Model/chatmodel.dart';
+import 'package:flutter_application_1/NewScreen/call_screen.dart';
 import 'package:flutter_application_1/Pages/camarapage.dart';
 import 'package:flutter_application_1/Pages/chatpage.dart';
 import 'package:flutter_application_1/Pages/status.dart';
@@ -26,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Whatsapp Clone"),
+        title: const Text("Edu-Master Clone"),
         actions: [
           IconButton(icon: const Icon(Icons.search), onPressed: () {}),
           PopupMenuButton<String>(
@@ -85,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen>
           sourceChat: widget.sourceChat,
         ),
         StatusPage(),
-        Text("call"),
+        CallScreen(),
       ]),
     );
   }

@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 class OwnFileCard extends StatelessWidget {
-  const OwnFileCard({Key? key, required this.path, this.message, this.time})
+  const OwnFileCard({Key? key, this.path, this.message, this.time})
       : super(key: key);
-  final String path;
+  final String? path;
   final String? message;
   final String? time;
   @override
@@ -32,22 +32,28 @@ class OwnFileCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Image.file(
-                            File(path),
+                            File(path!),
                             fit: BoxFit.fitHeight,
                           ),
                         ),
-                        message!.length > 0
-                            ? Container(
-                                height: 40,
-                                padding: EdgeInsets.only(left: 15, top: 8),
-                                child: Text(
+                        message!.length < 0
+                            ? Stack(children: [
+                                Text(
                                   message!,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 15,
                                       fontWeight: FontWeight.w600),
-                                ))
+                                ),
+                                Text(time!,
+                                    style: TextStyle(
+                                        fontSize: 13, color: Colors.grey[600])),
+                                Icon(
+                                  Icons.done_all,
+                                  size: 16,
+                                )
+                              ])
                             : Container()
                       ],
                     )))));

@@ -89,6 +89,7 @@ class _IndividualPageState extends State<IndividualPage> {
         message: message,
         path: path,
         time: DateTime.now().toString().substring(10, 16));
+
     setState(() {
       setState(() {
         messages.add(messageModel);
