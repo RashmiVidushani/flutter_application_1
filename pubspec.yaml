@@ -45,6 +45,9 @@ dependencies:
   otp_text_field: ^1.1.2
   image_picker: ^0.8.5
   http: ^0.13.4
+  firebase_auth: ^3.3.13
+  firebase_core: ^1.14.0
+  pinput: ^0.2.6
 
 dev_dependencies:
   flutter_test:

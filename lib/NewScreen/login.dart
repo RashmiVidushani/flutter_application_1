@@ -64,8 +64,8 @@ class _LoginState extends State<Login> {
               ),
               InkWell(
                 onTap: () {
-                  if (_phone.text.length < 10) {
-                    NoTextDialog();
+                  if (_phone.text.length != 9) {
+                    InvalidNumber();
                   } else {
                     ShowtheDialog();
                   }
@@ -74,11 +74,21 @@ class _LoginState extends State<Login> {
                   color: Colors.tealAccent[400],
                   height: 40,
                   width: 70,
-                  child: Center(
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OtpScreen(
+                                      number: _phone.text,
+                                      countrycode: countrycode,
+                                    )));
+                      },
                       child: Text(
-                    "Next",
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
-                  )),
+                        "Next",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700, fontSize: 18),
+                      )),
                 ),
               ),
               SizedBox(
@@ -125,34 +135,27 @@ class _LoginState extends State<Login> {
   Widget number() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 5),
-      width: MediaQuery.of(context).size.width / 1.5,
+      width: MediaQuery.of(context).size.width / 1,
       height: 50,
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
         Container(
           child: Row(
             children: [
               Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(color: Colors.teal, width: 2))),
-                child: Text(countrycode,
-                    style: TextStyle(fontSize: 17, letterSpacing: 1)),
-              ),
-              SizedBox(
-                width: 50,
-              ),
-              Container(
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  padding: EdgeInsets.symmetric(vertical: 5),
                   decoration: BoxDecoration(
                       border: Border(
                           bottom: BorderSide(color: Colors.teal, width: 1.8))),
-                  width: MediaQuery.of(context).size.width / 1.5 - 100,
                   child: TextFormField(
+                    textAlign: TextAlign.center,
                     controller: _phone,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(8),
-                        hintText: "Phone Number"),
+                      border: InputBorder.none,
+                      hintText: "Enter phone number ",
+                      prefix: Text(countrycode),
+                    ),
                   ))
             ],
           ),
@@ -184,7 +187,7 @@ class _LoginState extends State<Login> {
                     SizedBox(
                       height: 10,
                     ),
-                    Text(countrycode + " " + _phone.text,
+                    Text(_phone.text,
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w600))
                   ]),
@@ -204,9 +207,10 @@ class _LoginState extends State<Login> {
                         context,
                         MaterialPageRoute(
                             builder: (builder) => OtpScreen(
-                                  countrycode: countrycode,
                                   number: _phone.text,
+                                  countrycode: countrycode,
                                 )));
+                    _phone.clear();
                   },
                   child: Text(
                     "Confirm",
@@ -216,7 +220,7 @@ class _LoginState extends State<Login> {
         });
   }
 
-  Future<void> NoTextDialog() {
+  Future<void> InvalidNumber() {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -226,7 +230,7 @@ class _LoginState extends State<Login> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Please enter a valid phone number",
+                    Text("Please enter a valid number",
                         style: TextStyle(fontSize: 14)),
                   ]),
             ),

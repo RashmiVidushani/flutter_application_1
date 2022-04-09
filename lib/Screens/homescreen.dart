@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Model/chatmodel.dart';
 import 'package:flutter_application_1/NewScreen/call_screen.dart';
 import 'package:flutter_application_1/Pages/camarapage.dart';
 import 'package:flutter_application_1/Pages/chatpage.dart';
 import 'package:flutter_application_1/Pages/status.dart';
+import 'package:flutter_application_1/Screens/loginscreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key, this.chats, this.sourceChat}) : super(key: key);
@@ -16,25 +18,27 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
+  late String uid;
   late TabController _controller;
   @override
   void initState() {
     super.initState();
     _controller = TabController(length: 4, vsync: this, initialIndex: 1);
+    uid = FirebaseAuth.instance.currentUser!.uid;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Edu-Master Clone"),
+        title: Text("Edu-Master Clone $uid"),
         actions: [
           IconButton(icon: const Icon(Icons.search), onPressed: () {}),
-          PopupMenuButton<String>(
+          PopupMenuButton(
             onSelected: (value) {
               print(value);
             },
-            itemBuilder: (BuildContext contesxt) {
+            itemBuilder: (BuildContext context) {
               return [
                 const PopupMenuItem(
                   child: Text("New group"),
@@ -56,6 +60,18 @@ class _HomeScreenState extends State<HomeScreen>
                   child: Text("Settings"),
                   value: "Settings",
                 ),
+                PopupMenuItem(
+                    child: GestureDetector(
+                        onTap: () async {
+                          // await _auth.signOut();
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginScreen()));
+                        },
+                        child: Text(
+                          "Logout",
+                        ))),
               ];
             },
           )
