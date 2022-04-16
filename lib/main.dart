@@ -1,11 +1,18 @@
 import 'package:camera/camera.dart';
+import 'package:contacts_service/contacts_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/NewScreen/call_screen.dart';
 import 'package:flutter_application_1/NewScreen/landingscreen.dart';
 import 'package:flutter_application_1/NewScreen/login.dart';
+import 'package:flutter_application_1/NewScreen/userdetails.dart';
+import 'package:flutter_application_1/Pages/chatpage.dart';
 import 'package:flutter_application_1/Screens/camarascreen.dart';
 import 'package:flutter_application_1/Screens/homescreen.dart';
 import 'package:flutter_application_1/Screens/loginscreen.dart';
+import 'package:flutter_application_1/Screens/profile.dart';
+import 'package:flutter_application_1/Screens/selectcontact.dart';
+import 'package:flutter_application_1/Screens/splashscreen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +33,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.orange,
       ),
-      home: const Login(),
+      home: LoginScreen(),
+      routes: {'/profile': (context) => const Profile()},
     );
   }
 }

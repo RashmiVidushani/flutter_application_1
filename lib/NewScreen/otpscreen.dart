@@ -1,8 +1,11 @@
-// ignore_for_file: deprecated_member_use
+import 'dart:ffi';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/NewScreen/userdetails.dart';
 import 'package:flutter_application_1/Screens/homescreen.dart';
+import 'package:flutter_application_1/Screens/profile.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:path/path.dart';
@@ -92,15 +95,30 @@ class _OtpScreenState extends State<OtpScreen> {
               followingFieldDecoration: pinPutDecoration,
               pinAnimationType: PinAnimationType.fade,
               onSubmit: (pin) async {
+                /* */
                 try {
                   await FirebaseAuth.instance
                       .signInWithCredential(PhoneAuthProvider.credential(
                           verificationId: _verificationCode, smsCode: pin))
                       .then((value) async {
+                    FirebaseAuth auth = FirebaseAuth.instance;
+                    String uid = auth.currentUser!.uid.toString();
+
                     if (value.user != null) {
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .add({'uid': uid, 'username': null, 'bio': null});
+
                       Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => HomeScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => UserDetails()),
+                          (route) => false);
+                    } else {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => UserDetails()),
                           (route) => false);
                     }
                   });
@@ -120,7 +138,15 @@ class _OtpScreenState extends State<OtpScreen> {
           SizedBox(
             height: 20,
           ),
-          bottomButton("Resend message", Icons.message),
+          GestureDetector(
+            onTap: () async {
+              _verifyPhone();
+            },
+            child: bottomButton(
+              "Resend code",
+              Icons.message,
+            ),
+          ),
           SizedBox(
             height: 12,
           ),
@@ -159,12 +185,8 @@ class _OtpScreenState extends State<OtpScreen> {
           await FirebaseAuth.instance
               .signInWithCredential(credential)
               .then((value) async {
-            if (value.user != null) {
-              Navigator.pushAndRemoveUntil(
-                  this.context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
-                  (route) => false);
-            }
+            Navigator.push(this.context,
+                MaterialPageRoute(builder: (context) => UserDetails()));
           });
         },
         verificationFailed: (FirebaseAuthException e) {
@@ -181,6 +203,22 @@ class _OtpScreenState extends State<OtpScreen> {
           });
         },
         timeout: Duration(seconds: 60));
+  }
+
+  createUserInfirestore() async {
+    final usersRef = FirebaseFirestore.instance.collection('users');
+
+    User? user = FirebaseAuth.instance.currentUser;
+    DocumentSnapshot doc = await usersRef.doc(user!.uid).get();
+
+    if (!doc.exists) {
+      Navigator.push(
+          this.context, MaterialPageRoute(builder: (context) => Profile()));
+      usersRef.doc(user.uid).set({
+        "uid": user.uid,
+      });
+      doc = await usersRef.doc(user.uid).get();
+    }
   }
 
   @override

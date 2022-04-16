@@ -18,31 +18,36 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
-  late String uid;
   late TabController _controller;
+  User? user = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
     super.initState();
     _controller = TabController(length: 4, vsync: this, initialIndex: 1);
-    uid = FirebaseAuth.instance.currentUser!.uid;
   }
+
+  var selectedItem = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edu-Master Clone $uid"),
+        // title: Text(user!.uid),
         actions: [
           IconButton(icon: const Icon(Icons.search), onPressed: () {}),
           PopupMenuButton(
             onSelected: (value) {
+              setState(() {
+                selectedItem = value.toString();
+              });
               print(value);
+              Navigator.pushNamed(context, value.toString());
             },
             itemBuilder: (BuildContext context) {
               return [
                 const PopupMenuItem(
-                  child: Text("New group"),
-                  value: "New group",
+                  child: Text("Profile"),
+                  value: "/profile",
                 ),
                 const PopupMenuItem(
                   child: Text("New broadcast"),

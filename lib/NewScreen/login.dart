@@ -16,6 +16,9 @@ class _LoginState extends State<Login> {
   String countryname = "Sri Lanka";
   String countrycode = "+94";
   TextEditingController _phone = TextEditingController();
+  TextEditingController _username = TextEditingController();
+  TextEditingController _bio = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +26,7 @@ class _LoginState extends State<Login> {
           elevation: 0,
           backgroundColor: Colors.white,
           title: Text(
-            "Enter your phone number",
+            "Setting user profile ",
             style: TextStyle(
                 color: Colors.teal,
                 fontWeight: FontWeight.w700,
@@ -42,17 +45,13 @@ class _LoginState extends State<Login> {
           width: MediaQuery.of(context).size.width,
           child: Column(
             children: [
-              Text("Whatsapp will send an sms message to verify your number",
-                  style: TextStyle(fontSize: 13.5)),
               SizedBox(
                 height: 5,
               ),
-              Text(
-                "Whats my number?",
-                style: TextStyle(color: Colors.cyan[800], fontSize: 12.8),
-              ),
+              Text("Register now!",
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
               SizedBox(
-                height: 5,
+                height: 15,
               ),
               countryCard(),
               SizedBox(
