@@ -1,11 +1,19 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Model/chatmodel.dart';
+import 'package:flutter_application_1/Screens/homescreen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
 
 class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
-
+  const Profile({
+    Key? key,
+    this.sourceChat,
+  }) : super(key: key);
+  final ChatModel? sourceChat;
   @override
   State<Profile> createState() => _ProfileState();
 }
@@ -13,37 +21,67 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final CollectionReference _users =
       FirebaseFirestore.instance.collection('users');
+
   User? user = FirebaseAuth.instance.currentUser;
   TextEditingController _username = TextEditingController();
   TextEditingController _bio = TextEditingController();
   TextEditingController _uid = TextEditingController();
+  int popTime = 0;
   @override
   Widget build(BuildContext context) {
-    _updateUser() {
-      FirebaseFirestore.instance.collection("users").doc(user!.uid).update({
-        "username": _username.text,
-        "uid": _uid.text,
-        "bio": _bio.text
-      }).then((_) {
-        print("update sucessful");
+    /*
+    Future setUser() async {
+      setState(() {});
+      var url = "http://192.168.8.228:5000/api/setusers";
+      var response = await http.post(Uri.parse(url), body: {
+        "idsignup": user!.uid,
+        "signupusername": _username.text.toString(),
+        "signupbio": _bio.text.toString(),
       });
+      var message = jsonDecode(response.body);
+      if (message == "true") {
+        print("Successful " + message);
+      } else {
+        print("Error: " + message);
+      }
+    }*/
+
+    /*
+   String uid= widget.sourceChat!.id!.toString();
+    setUsers(String uid, String username, String bio) {
+      ChatModel chatModel = ChatModel(
+         ,
+      );
     }
 
+    void setUser(String username, String uid, String bio) async {
+      for (int i = 0; i < popTime; i++) {
+        Navigator.pop(context);
+      }
+
+      var request = http.MultipartRequest(
+          "POST", Uri.parse("http://192.168.8.228:5000/api/setusers"));
+      // request.files.add(await http.MultipartFile.fromPath("img", path));
+      request.headers.addAll({
+        "Content-type": "multipart/form-data",
+      });
+      http.StreamedResponse response = await request.send();
+      var httpResponse = await http.Response.fromStream(response);
+      var data = json.decode(httpResponse.body);
+      //print(data['path']);
+    }
+*/
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            title: Center(
-              child: Text("User Profile",
-                  style: TextStyle(color: Colors.teal[800], fontSize: 16.5)),
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.more_vert, color: Colors.black),
-              )
-            ]),
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Center(
+            child: Text("User Profile",
+                style: TextStyle(color: Colors.teal[800], fontSize: 16.5)),
+          ),
+        ),
         body: SingleChildScrollView(
           child: Container(
               height: MediaQuery.of(context).size.height,
@@ -88,17 +126,9 @@ class _ProfileState extends State<Profile> {
                         width: 70,
                         child: ElevatedButton(
                             onPressed: () {
-                              _updateUser();
-                              /*
-                              String? username = _username.text;
-                              String? uid = _uid.text;
-                              String? bio = _bio.text;
-
-                              await _users.doc(uid).update({
-                                "username": username,
-                                "uid": uid,
-                                "bio": bio,
-                              });*/
+                              //setUser();
+                              //  _updateUser();
+                              _MoveToHome();
                               _clearAll();
                             },
                             child: Text("Save")),
@@ -141,7 +171,7 @@ class _ProfileState extends State<Profile> {
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: user!.uid,
+                      hintText: widget.sourceChat?.id.toString(),
                       hintStyle: TextStyle(color: Colors.black26),
                     ),
                   ))
@@ -187,7 +217,7 @@ class _ProfileState extends State<Profile> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 5),
       width: MediaQuery.of(context).size.width / 1,
-      height: 50,
+      height: 90,
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
         Row(
           children: [
@@ -200,10 +230,11 @@ class _ProfileState extends State<Profile> {
                 child: TextFormField(
                   textAlign: TextAlign.center,
                   controller: _bio,
-                  maxLines: 5,
-                  minLines: 3,
+                  maxLines: 3,
+                  minLines: 1,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
+                    isDense: true,
                     border: InputBorder.none,
                     hintText: "Say something about you! ",
                   ),
@@ -218,5 +249,10 @@ class _ProfileState extends State<Profile> {
     _username.text = "";
     _bio.text = "";
     _uid.text = "";
+  }
+
+  void _MoveToHome() {
+    Navigator.push(
+        this.context, MaterialPageRoute(builder: (context) => HomeScreen()));
   }
 }

@@ -1,29 +1,21 @@
-import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/NewScreen/login.dart';
-import 'package:flutter_application_1/NewScreen/registration.dart';
-import 'package:flutter_application_1/Screens/homescreen.dart';
-import 'package:flutter_application_1/rest/restapi.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserDetails extends StatefulWidget {
-  UserDetails({Key? key}) : super(key: key);
+class Registration extends StatefulWidget {
+  const Registration({Key? key}) : super(key: key);
 
   @override
-  State<UserDetails> createState() => _UserDetailsState();
+  State<Registration> createState() => _RegistrationState();
 }
 
-class _UserDetailsState extends State<UserDetails> {
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+class _RegistrationState extends State<Registration> {
+  TextEditingController _username = TextEditingController();
+  TextEditingController _password = TextEditingController();
   late SharedPreferences _sharedPreferences;
 
   @override
-  Widget build(BuildContext parentContext) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -48,7 +40,7 @@ class _UserDetailsState extends State<UserDetails> {
               padding: EdgeInsets.only(top: 25.0),
               child: Center(
                 child: Text(
-                  "Welcome!",
+                  "Get started!",
                   style: TextStyle(fontSize: 25.0),
                 ),
               ),
@@ -84,12 +76,10 @@ class _UserDetailsState extends State<UserDetails> {
                 width: MediaQuery.of(context).size.width / 4,
                 child: ElevatedButton(
                     onPressed: () {
-                      _usernameController.text.isNotEmpty &&
-                              _passwordController.text.isNotEmpty
-                          ? doLogin(_usernameController.text,
-                              _passwordController.text)
+                      _username.text.isNotEmpty && _password.text.isNotEmpty
+                          ? doLogin(_username.text, _password.text)
                           : Fluttertoast.showToast(
-                              msg: 'All feilds are required',
+                              msg: 'all feilds are required',
                               textColor: Colors.red);
                     },
                     child: Text(
@@ -98,9 +88,6 @@ class _UserDetailsState extends State<UserDetails> {
                           TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
                     )),
               ),
-            ),
-            SizedBox(
-              height: 50,
             ),
             InkWell(
               onTap: () => Navigator.of(context).push(
@@ -119,26 +106,11 @@ class _UserDetailsState extends State<UserDetails> {
   }
 
   doLogin(String username, String password) async {
+    /*
     _sharedPreferences = await SharedPreferences.getInstance();
     var res = await userLogin(username.trim(), password.trim());
-
-    if (res['sucess']) {
-      Fluttertoast.showToast(msg: 'Login successful');
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => HomeScreen()));
-    } else {
-      Fluttertoast.showToast(
-          msg: 'Invalid email or password', textColor: Colors.red);
-    }
-
-    /* _sharedPreferences = await SharedPreferences.getInstance();
-    var res = await userLogin(username.trim(), password.trim());
-    print(res.toString());
-    print(password);
-    print(username);
-
-    if (_sharedPreferences.getString('username') == null &&
-        _sharedPreferences.getString('password') == null) {
+    if (_sharedPreferences.getString('uid') == null &&
+        _sharedPreferences.getString('uname') == null) {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => UserDetails()));
     } else {
@@ -146,10 +118,10 @@ class _UserDetailsState extends State<UserDetails> {
           context, MaterialPageRoute(builder: (context) => Login()));
     }
     if (res['sucess']) {
-      String username = res['users'][0]['username'];
-      String password = res['users'][0]['password'];
-      _sharedPreferences.setString('password', password);
-      _sharedPreferences.setString('username', username);
+      String uname = res['user'][0]['username'];
+      String uid = res['user'][0]['id'];
+      _sharedPreferences.setString('uId', uid);
+      _sharedPreferences.setString('userName', uname);
     } else {
       Fluttertoast.showToast(msg: 'Email or the password is not valid');
     }*/
@@ -172,7 +144,7 @@ class _UserDetailsState extends State<UserDetails> {
                           bottom: BorderSide(color: Colors.teal, width: 1.8))),
                   child: TextFormField(
                     textAlign: TextAlign.center,
-                    controller: _usernameController,
+                    controller: _username,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       isDense: true,
@@ -205,7 +177,7 @@ class _UserDetailsState extends State<UserDetails> {
                   child: TextFormField(
                     textAlign: TextAlign.center,
                     obscureText: true,
-                    controller: _passwordController,
+                    controller: _password,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       isDense: true,

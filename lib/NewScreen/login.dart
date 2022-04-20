@@ -1,9 +1,11 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/NewScreen/country.dart';
 import 'package:flutter_application_1/NewScreen/countrymodel.dart';
 import 'package:flutter_application_1/NewScreen/otpscreen.dart';
+import 'package:flutter_application_1/Screens/homescreen.dart';
+import 'package:flutter_application_1/rest/restapi.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -16,88 +18,110 @@ class _LoginState extends State<Login> {
   String countryname = "Sri Lanka";
   String countrycode = "+94";
   TextEditingController _phone = TextEditingController();
-  TextEditingController _username = TextEditingController();
-  TextEditingController _bio = TextEditingController();
 
+  late SharedPreferences _sharedPreferences;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.white,
-          title: Text(
-            "Setting user profile ",
-            style: TextStyle(
-                color: Colors.teal,
-                fontWeight: FontWeight.w700,
-                wordSpacing: 1,
-                fontSize: 18),
-          ),
-          centerTitle: true,
-          actions: [
-            Icon(
-              Icons.more_vert,
-              color: Colors.black,
+        appBar: AppBar(
+            elevation: 0,
+            backgroundColor: Colors.white,
+            title: Text(
+              "Setting user profile ",
+              style: TextStyle(
+                  color: Colors.teal,
+                  fontWeight: FontWeight.w700,
+                  wordSpacing: 1,
+                  fontSize: 18),
             ),
-          ]),
-      body: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 5,
+            centerTitle: true,
+            actions: [
+              Icon(
+                Icons.more_vert,
+                color: Colors.black,
               ),
-              Text("Register now!",
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
-              SizedBox(
-                height: 15,
-              ),
-              countryCard(),
-              SizedBox(
-                height: 5,
-              ),
-              number(),
-              Expanded(
-                child: Container(),
-              ),
-              InkWell(
-                onTap: () {
-                  if (_phone.text.length != 9) {
-                    InvalidNumber();
-                  } else {
-                    ShowtheDialog();
-                  }
-                },
-                child: Container(
-                  color: Colors.tealAccent[400],
-                  height: 40,
-                  width: 70,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => OtpScreen(
-                                      number: _phone.text,
-                                      countrycode: countrycode,
-                                    )));
-                      },
-                      child: Text(
-                        "Next",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700, fontSize: 18),
-                      )),
-                ),
-              ),
-              SizedBox(
-                height: 40,
-              ),
-            ],
-          )),
-    );
+            ]),
+        body: SingleChildScrollView(
+          child: Container(
+              height: MediaQuery.of(context).size.height / 3,
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text("Register now!",
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+                  countryCard(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  number(),
+                  Expanded(
+                    child: Container(),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (_phone.text.length != 9) {
+                        InvalidNumber();
+                      } else {
+                        ShowtheDialog();
+                      }
+                    },
+                    child: Container(
+                      color: Colors.tealAccent[400],
+                      height: 40,
+                      width: 70,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OtpScreen(
+                                          countrycode: countrycode,
+                                          number: _phone.text,
+                                        )));
+                          },
+                          child: Text(
+                            "Next",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700, fontSize: 18),
+                          )),
+                    ),
+                  ),
+                ],
+              )),
+        ));
   }
 
+/*
+  doLogin(String username, String password) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    var res = await userLogin(username.trim(), password.trim());
+    if (_sharedPreferences.getString('uid') == null &&
+        _sharedPreferences.getString('uname') == null) {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => OtpScreen(
+                    number: _phone.text,
+                    countrycode: countrycode,
+                  )));
+    } else {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+    }
+    if (res['sucess']) {
+      String uname = res['user'][0]['username'];
+      String uid = res['user'][0]['id'];
+      _sharedPreferences.setString('uId', uid);
+      _sharedPreferences.setString('userName', username);
+    } else {
+      Fluttertoast.showToast(msg: 'Email or the password is not valid');
+    }
+  }
+*/
   Widget countryCard() {
     return InkWell(
         onTap: () {
@@ -151,6 +175,7 @@ class _LoginState extends State<Login> {
                     controller: _phone,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
+                      isDense: true,
                       border: InputBorder.none,
                       hintText: "Enter phone number ",
                       prefix: Text(countrycode),
@@ -246,5 +271,5 @@ class _LoginState extends State<Login> {
         });
   }
 }
-//Flutter Chat App - Let's work on the Login page and Country Page of WhatsApp Clone (pt-1) || #27
-//12
+//how to fetch login email and password from database using node js and flutter http
+//32

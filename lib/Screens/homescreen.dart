@@ -32,7 +32,8 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // title: Text(user!.uid),
+        automaticallyImplyLeading: false,
+        title: Text(user!.uid),
         actions: [
           IconButton(icon: const Icon(Icons.search), onPressed: () {}),
           PopupMenuButton(

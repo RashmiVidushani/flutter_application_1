@@ -1,5 +1,7 @@
-import 'dart:ffi';
+import 'dart:convert';
 
+import 'package:flutter_application_1/Model/chatmodel.dart';
+import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +14,13 @@ import 'package:path/path.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({Key? key, required this.number, required this.countrycode})
+  const OtpScreen(
+      {Key? key,
+      required this.number,
+      required this.countrycode,
+      this.sourceChat})
       : super(key: key);
-
+  final ChatModel? sourceChat;
   final String number;
   final String countrycode;
 
@@ -36,6 +42,41 @@ class _OtpScreenState extends State<OtpScreen> {
       ));
   @override
   Widget build(BuildContext context) {
+    /*Future createUserInSql() async {
+      setState(() {});
+      var url = "http://192.168.8.228:5000/api/setusers";
+      var response = await http.post(Uri.parse(url), body: {
+        "idsignup": widget.sourceChat?.id,
+        "signupusername": null,
+        "signupbio": null,
+      });
+      var message = jsonDecode(response.body);
+      if (message == "true") {
+        print("Successful " + message);
+      } else {
+        print("Error: " + message);
+      }
+    }*/
+
+    createUserInfirestore() async {
+      final usersRef = FirebaseFirestore.instance.collection('users');
+
+      User? user = FirebaseAuth.instance.currentUser;
+      DocumentSnapshot doc = await usersRef.doc(user!.uid).get();
+
+      if (!doc.exists) {
+        Navigator.push(this.context,
+            MaterialPageRoute(builder: (context) => UserDetails()));
+        usersRef.doc(user.uid).set({
+          "uid": user.uid,
+        });
+        doc = await usersRef.doc(user.uid).get();
+      } else {
+        Navigator.push(this.context,
+            MaterialPageRoute(builder: (context) => UserDetails()));
+      }
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -101,13 +142,17 @@ class _OtpScreenState extends State<OtpScreen> {
                       .signInWithCredential(PhoneAuthProvider.credential(
                           verificationId: _verificationCode, smsCode: pin))
                       .then((value) async {
+                    //createUserInSql();
+                    createUserInfirestore();
+
+/*
                     FirebaseAuth auth = FirebaseAuth.instance;
                     String uid = auth.currentUser!.uid.toString();
 
                     if (value.user != null) {
                       await FirebaseFirestore.instance
                           .collection('users')
-                          .add({'uid': uid, 'username': null, 'bio': null});
+                          .add({'uid': uid});
 
                       Navigator.pushAndRemoveUntil(
                           context,
@@ -120,7 +165,7 @@ class _OtpScreenState extends State<OtpScreen> {
                           MaterialPageRoute(
                               builder: (context) => UserDetails()),
                           (route) => false);
-                    }
+                    }*/
                   });
                 } catch (e) {
                   FocusScope.of(context).unfocus();
@@ -205,27 +250,9 @@ class _OtpScreenState extends State<OtpScreen> {
         timeout: Duration(seconds: 60));
   }
 
-  createUserInfirestore() async {
-    final usersRef = FirebaseFirestore.instance.collection('users');
-
-    User? user = FirebaseAuth.instance.currentUser;
-    DocumentSnapshot doc = await usersRef.doc(user!.uid).get();
-
-    if (!doc.exists) {
-      Navigator.push(
-          this.context, MaterialPageRoute(builder: (context) => Profile()));
-      usersRef.doc(user.uid).set({
-        "uid": user.uid,
-      });
-      doc = await usersRef.doc(user.uid).get();
-    }
-  }
-
   @override
   void initState() {
     super.initState();
     _verifyPhone();
   }
 }
-//Flutter - Let's work on the OTP Screen of WhatsApp Clone || Speed Coding || WhatsApp Clone #29
-//4
