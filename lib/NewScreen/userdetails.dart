@@ -121,11 +121,24 @@ class _UserDetailsState extends State<UserDetails> {
   doLogin(String username, String password) async {
     _sharedPreferences = await SharedPreferences.getInstance();
     var res = await userLogin(username.trim(), password.trim());
-
+    print(res.toString());
     if (res['sucess']) {
+      String useruserName = res['users'][0]['username'];
+      String userEmail = res['users'][0]['email'];
+      _sharedPreferences.setString('usersemail', userEmail);
+      _sharedPreferences.setString('usersusername', useruserName);
       Fluttertoast.showToast(msg: 'Login successful');
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => HomeScreen()));
+      _sharedPreferences = await SharedPreferences.getInstance();
+      Timer(Duration(seconds: 3), () async {
+        if (_sharedPreferences.getString("usersemail") == null &&
+            _sharedPreferences.getString("usersusername") == null) {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => Login()));
+        } else {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => HomeScreen()));
+        }
+      });
     } else {
       Fluttertoast.showToast(
           msg: 'Invalid email or password', textColor: Colors.red);
@@ -136,7 +149,8 @@ class _UserDetailsState extends State<UserDetails> {
     print(res.toString());
     print(password);
     print(username);
-
+  String useruserName = res['users'][0]['username'];
+    String userId = res['users'][0]['id'];
     if (_sharedPreferences.getString('username') == null &&
         _sharedPreferences.getString('password') == null) {
       Navigator.pushReplacement(
