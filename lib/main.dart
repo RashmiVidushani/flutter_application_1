@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/NewScreen/call_screen.dart';
 import 'package:flutter_application_1/NewScreen/landingscreen.dart';
 import 'package:flutter_application_1/NewScreen/login.dart';
-import 'package:flutter_application_1/NewScreen/userdetails.dart';
+import 'package:flutter_application_1/NewScreen/registration.dart';
+import 'package:flutter_application_1/NewScreen/loginuser.dart';
 import 'package:flutter_application_1/Pages/chatpage.dart';
 import 'package:flutter_application_1/Screens/camarascreen.dart';
 import 'package:flutter_application_1/Screens/homescreen.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.orange,
       ),
-      home: UserDetails(),
+      home: Registration(),
       routes: {'/profile': (context) => const Profile()},
     );
   }

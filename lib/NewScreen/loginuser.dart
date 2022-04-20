@@ -10,14 +10,14 @@ import 'package:flutter_application_1/rest/restapi.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserDetails extends StatefulWidget {
-  UserDetails({Key? key}) : super(key: key);
+class LoginUser extends StatefulWidget {
+  LoginUser({Key? key}) : super(key: key);
 
   @override
-  State<UserDetails> createState() => _UserDetailsState();
+  State<LoginUser> createState() => _UserDetailsState();
 }
 
-class _UserDetailsState extends State<UserDetails> {
+class _UserDetailsState extends State<LoginUser> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   late SharedPreferences _sharedPreferences;
@@ -154,7 +154,7 @@ class _UserDetailsState extends State<UserDetails> {
     if (_sharedPreferences.getString('username') == null &&
         _sharedPreferences.getString('password') == null) {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => UserDetails()));
+          context, MaterialPageRoute(builder: (context) => LoginUser()));
     } else {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Login()));

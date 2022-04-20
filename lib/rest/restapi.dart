@@ -10,3 +10,19 @@ Future userLogin(String username, String password) async {
   var decodedData = jsonDecode(response.body);
   return decodedData;
 }
+
+Future userRegister(
+    String username, String password, String phone, String email) async {
+  final response = await http.post(Uri.parse('${Utils.baseUrl}/user/register'),
+      headers: {
+        "Accept": "Application/json"
+      },
+      body: {
+        'username': username,
+        'password': password,
+        'email': email,
+        'phone': phone
+      });
+  var decodedData = jsonDecode(response.body);
+  return decodedData;
+}

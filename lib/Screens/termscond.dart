@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/NewScreen/login.dart';
-import 'package:flutter_application_1/NewScreen/userdetails.dart';
+import 'package:flutter_application_1/NewScreen/loginuser.dart';
 import 'package:flutter_application_1/Screens/loginscreen.dart';
 import 'package:flutter_application_1/widget/color.dart';
 
@@ -24,8 +24,8 @@ class _TermscondState extends State<Termscond> {
           padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => UserDetails()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => LoginUser()));
           },
           child: const Text(
             "I agree",

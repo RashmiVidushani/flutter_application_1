@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/NewScreen/loginuser.dart';
+import 'package:flutter_application_1/rest/restapi.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,6 +14,8 @@ class Registration extends StatefulWidget {
 class _RegistrationState extends State<Registration> {
   TextEditingController _username = TextEditingController();
   TextEditingController _password = TextEditingController();
+  TextEditingController _email = TextEditingController();
+  TextEditingController _phone = TextEditingController();
   late SharedPreferences _sharedPreferences;
 
   @override
@@ -32,7 +36,7 @@ class _RegistrationState extends State<Registration> {
       ),
       body: SingleChildScrollView(
           child: Container(
-        height: MediaQuery.of(context).size.height / 2,
+        height: MediaQuery.of(context).size.height / 1.6,
         width: MediaQuery.of(context).size.width,
         child: Column(
           children: [
@@ -48,10 +52,15 @@ class _RegistrationState extends State<Registration> {
             SizedBox(
               height: 25,
             ),
-            SizedBox(
-              height: 25,
-            ),
             username(),
+            SizedBox(
+              height: 10,
+            ),
+            email(),
+            SizedBox(
+              height: 10,
+            ),
+            phone(),
             SizedBox(
               height: 10,
             ),
@@ -73,28 +82,41 @@ class _RegistrationState extends State<Registration> {
               child: Container(
                 color: Colors.tealAccent[400],
                 height: 40,
-                width: MediaQuery.of(context).size.width / 4,
+                width: MediaQuery.of(context).size.width / 3,
                 child: ElevatedButton(
                     onPressed: () {
-                      _username.text.isNotEmpty && _password.text.isNotEmpty
-                          ? doLogin(_username.text, _password.text)
+                      _username.text.isNotEmpty &&
+                              _password.text.isNotEmpty &&
+                              _email.text.isNotEmpty &&
+                              _phone.text.isNotEmpty
+                          ? doRegister(_username.text, _password.text,
+                              _email.text, _phone.text)
                           : Fluttertoast.showToast(
                               msg: 'all feilds are required',
                               textColor: Colors.red);
                     },
                     child: Text(
-                      "Login",
+                      "Register",
                       style:
                           TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
                     )),
               ),
             ),
+            SizedBox(
+              height: 40,
+            ),
+            RichText(
+                text: TextSpan(
+                    text: "Already have an account? ",
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 10, 10, 10),
+                        fontSize: 14.5))),
             InkWell(
-              onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => Registration())),
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => LoginUser())),
               child: RichText(
                   text: TextSpan(
-                      text: "Create a new account",
+                      text: "Login",
                       style: TextStyle(
                           color: Color.fromARGB(255, 39, 57, 161),
                           fontSize: 14.5))),
@@ -105,26 +127,16 @@ class _RegistrationState extends State<Registration> {
     );
   }
 
-  doLogin(String username, String password) async {
-    /*
-    _sharedPreferences = await SharedPreferences.getInstance();
-    var res = await userLogin(username.trim(), password.trim());
-    if (_sharedPreferences.getString('uid') == null &&
-        _sharedPreferences.getString('uname') == null) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => UserDetails()));
-    } else {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Login()));
-    }
+  doRegister(
+      String username, String password, String email, String phone) async {
+    var res = await userRegister(username, password, phone, email);
+    print(res.toString());
     if (res['sucess']) {
-      String uname = res['user'][0]['username'];
-      String uid = res['user'][0]['id'];
-      _sharedPreferences.setString('uId', uid);
-      _sharedPreferences.setString('userName', uname);
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => LoginUser()));
     } else {
-      Fluttertoast.showToast(msg: 'Email or the password is not valid');
-    }*/
+      Fluttertoast.showToast(msg: 'please try again', textColor: Colors.red);
+    }
   }
 
   Widget username() {
@@ -150,6 +162,70 @@ class _RegistrationState extends State<Registration> {
                       isDense: true,
                       border: InputBorder.none,
                       hintText: "Enter a username ",
+                    ),
+                  ))
+            ],
+          ),
+        )
+      ]),
+    );
+  }
+
+  Widget email() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 5),
+      width: MediaQuery.of(context).size.width / 1,
+      height: 40,
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        Container(
+          child: Row(
+            children: [
+              Container(
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  padding: EdgeInsets.symmetric(vertical: 5),
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(color: Colors.teal, width: 1.8))),
+                  child: TextFormField(
+                    textAlign: TextAlign.center,
+                    controller: _email,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      border: InputBorder.none,
+                      hintText: "Enter a email ",
+                    ),
+                  ))
+            ],
+          ),
+        )
+      ]),
+    );
+  }
+
+  Widget phone() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 5),
+      width: MediaQuery.of(context).size.width / 1,
+      height: 40,
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        Container(
+          child: Row(
+            children: [
+              Container(
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  padding: EdgeInsets.symmetric(vertical: 5),
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(color: Colors.teal, width: 1.8))),
+                  child: TextFormField(
+                    textAlign: TextAlign.center,
+                    controller: _phone,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      border: InputBorder.none,
+                      hintText: "Enter your mobile number ",
                     ),
                   ))
             ],

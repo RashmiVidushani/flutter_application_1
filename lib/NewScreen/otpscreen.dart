@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/NewScreen/userdetails.dart';
+import 'package:flutter_application_1/NewScreen/loginuser.dart';
 import 'package:flutter_application_1/Screens/homescreen.dart';
 import 'package:flutter_application_1/Screens/profile.dart';
 import 'package:otp_text_field/otp_text_field.dart';
@@ -65,15 +65,15 @@ class _OtpScreenState extends State<OtpScreen> {
       DocumentSnapshot doc = await usersRef.doc(user!.uid).get();
 
       if (!doc.exists) {
-        Navigator.push(this.context,
-            MaterialPageRoute(builder: (context) => UserDetails()));
+        Navigator.push(
+            this.context, MaterialPageRoute(builder: (context) => LoginUser()));
         usersRef.doc(user.uid).set({
           "uid": user.uid,
         });
         doc = await usersRef.doc(user.uid).get();
       } else {
-        Navigator.push(this.context,
-            MaterialPageRoute(builder: (context) => UserDetails()));
+        Navigator.push(
+            this.context, MaterialPageRoute(builder: (context) => LoginUser()));
       }
     }
 
@@ -231,7 +231,7 @@ class _OtpScreenState extends State<OtpScreen> {
               .signInWithCredential(credential)
               .then((value) async {
             Navigator.push(this.context,
-                MaterialPageRoute(builder: (context) => UserDetails()));
+                MaterialPageRoute(builder: (context) => LoginUser()));
           });
         },
         verificationFailed: (FirebaseAuthException e) {
