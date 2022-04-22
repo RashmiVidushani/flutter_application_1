@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_application_1/NewScreen/country.dart';
-import 'package:flutter_application_1/NewScreen/countrymodel.dart';
+/*import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Entrance/country.dart';
+import 'package:flutter_application_1/Model/countrymodel.dart';
 import 'package:flutter_application_1/NewScreen/otpscreen.dart';
 import 'package:flutter_application_1/Screens/homescreen.dart';
 import 'package:flutter_application_1/rest/restapi.dart';
@@ -273,3 +273,5 @@ class _LoginState extends State<Login> {
 }
 //how to fetch login email and password from database using node js and flutter http
 //32
+
+*/

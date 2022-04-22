@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Model/chatmodel.dart';
-import 'package:flutter_application_1/NewScreen/call_screen.dart';
-import 'package:flutter_application_1/Pages/camarapage.dart';
+import 'package:flutter_application_1/Pages/call_screen.dart';
+import 'package:flutter_application_1/Screens/profile.dart';
+import 'package:flutter_application_1/screenemp/assignment.dart';
+import 'package:flutter_application_1/screenemp/camarapage.dart';
 import 'package:flutter_application_1/Pages/chatpage.dart';
-import 'package:flutter_application_1/Pages/status.dart';
-import 'package:flutter_application_1/Screens/loginscreen.dart';
+import 'package:flutter_application_1/no/status.dart';
+import 'package:flutter_application_1/no/loginscreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key, this.chats, this.sourceChat}) : super(key: key);
@@ -33,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(user!.uid),
+        title: Text("EDU-MASTER"),
         actions: [
           IconButton(icon: const Icon(Icons.search), onPressed: () {}),
           PopupMenuButton(
@@ -51,25 +53,13 @@ class _HomeScreenState extends State<HomeScreen>
                   value: "/profile",
                 ),
                 const PopupMenuItem(
-                  child: Text("New broadcast"),
-                  value: "New broadcast",
-                ),
-                const PopupMenuItem(
-                  child: Text("Whatsapp Web"),
-                  value: "Whatsapp Web",
-                ),
-                const PopupMenuItem(
-                  child: Text("Starred messages"),
-                  value: "Starred messages",
-                ),
-                const PopupMenuItem(
                   child: Text("Settings"),
                   value: "Settings",
                 ),
                 PopupMenuItem(
                     child: GestureDetector(
                         onTap: () async {
-                          // await _auth.signOut();
+                          await FirebaseAuth.instance.signOut();
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
@@ -93,10 +83,10 @@ class _HomeScreenState extends State<HomeScreen>
               text: "CHATS",
             ),
             Tab(
-              text: "STATUS",
+              text: "FILES",
             ),
             Tab(
-              text: "CALLS",
+              text: "PROFILE",
             )
           ],
         ),
@@ -107,8 +97,8 @@ class _HomeScreenState extends State<HomeScreen>
           chats: widget.chats,
           sourceChat: widget.sourceChat,
         ),
-        StatusPage(),
-        CallScreen(),
+        Assignment(),
+        Profile(),
       ]),
     );
   }

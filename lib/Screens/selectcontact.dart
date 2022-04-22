@@ -16,57 +16,19 @@ class SelectContact extends StatefulWidget {
 
 class _SelectContactState extends State<SelectContact> {
   ScrollController _scrollController = ScrollController();
-  @override
-  void initState() {
-    super.initState();
-    _askPermissions(null!);
-  }
-
-  Future<void> _askPermissions(String routeName) async {
-    PermissionStatus permissionStatus = await _getContactPermission();
-    if (permissionStatus == PermissionStatus.granted) {
-      if (routeName != null) {
-        Navigator.of(context).pushNamed(routeName);
-      }
-    } else {
-      _handleInvalidPermissions(permissionStatus);
-    }
-  }
-
-  Future<PermissionStatus> _getContactPermission() async {
-    PermissionStatus permission = await Permission.contacts.status;
-    if (permission != PermissionStatus.granted &&
-        permission != PermissionStatus.permanentlyDenied) {
-      PermissionStatus permissionStatus = await Permission.contacts.request();
-      return permissionStatus;
-    } else {
-      return permission;
-    }
-  }
-
-  void _handleInvalidPermissions(PermissionStatus permissionStatus) {
-    if (permissionStatus == PermissionStatus.denied) {
-      final snackBar = SnackBar(content: Text('Access to contact data denied'));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
-      final snackBar =
-          SnackBar(content: Text('Contact data not available on device'));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     List<ChatModel> contacts = [
-      /* ChatModel(name: "Dev", status: "full stack developer"),
-      ChatModel(name: "kir", status: "full stack developer"),
-      ChatModel(name: "sdd", status: "full stack developer"),
-      ChatModel(name: "De", status: "full stack developer"),
-      ChatModel(name: "ki", status: "full stack developer"),
-      ChatModel(name: "sd", status: "full stack developer"),
-      ChatModel(name: "Dv", status: "full stack developer"),
+      ChatModel(name: "Ann", status: "full stack developer"),
+      ChatModel(name: "Jack", status: "full stack developer"),
+      ChatModel(name: "Dean", status: "full stack developer"),
+      ChatModel(name: "Sam", status: "full stack developer"),
+      ChatModel(name: "Bobby", status: "full stack developer"),
+      ChatModel(name: "Micheal", status: "full stack developer"),
+      ChatModel(name: "Dylan", status: "full stack developer"),
       ChatModel(name: "ir", status: "full stack developer"),
-      ChatModel(name: "dd", status: "full stack developer"),*/
+      ChatModel(name: "dd", status: "full stack developer"),
     ];
     return Scaffold(
         appBar: AppBar(
@@ -121,4 +83,3 @@ class _SelectContactState extends State<SelectContact> {
         ));
   }
 }
-//15.11

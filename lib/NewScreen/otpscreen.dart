@@ -1,11 +1,13 @@
 import 'dart:convert';
 
+import 'package:flutter_application_1/Entrance/loginuser.dart';
 import 'package:flutter_application_1/Model/chatmodel.dart';
+import 'package:flutter_application_1/rest/restapi.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/NewScreen/loginuser.dart';
 import 'package:flutter_application_1/Screens/homescreen.dart';
 import 'package:flutter_application_1/Screens/profile.dart';
 import 'package:otp_text_field/otp_text_field.dart';
@@ -18,12 +20,13 @@ class OtpScreen extends StatefulWidget {
       {Key? key,
       required this.number,
       required this.countrycode,
-      this.sourceChat})
+      this.sourceChat,
+      required this.username})
       : super(key: key);
   final ChatModel? sourceChat;
   final String number;
   final String countrycode;
-
+  final String username;
   @override
   State<OtpScreen> createState() => _OtpScreenState();
 }
@@ -42,22 +45,6 @@ class _OtpScreenState extends State<OtpScreen> {
       ));
   @override
   Widget build(BuildContext context) {
-    /*Future createUserInSql() async {
-      setState(() {});
-      var url = "http://192.168.8.228:5000/api/setusers";
-      var response = await http.post(Uri.parse(url), body: {
-        "idsignup": widget.sourceChat?.id,
-        "signupusername": null,
-        "signupbio": null,
-      });
-      var message = jsonDecode(response.body);
-      if (message == "true") {
-        print("Successful " + message);
-      } else {
-        print("Error: " + message);
-      }
-    }*/
-
     createUserInfirestore() async {
       final usersRef = FirebaseFirestore.instance.collection('users');
 
@@ -65,33 +52,25 @@ class _OtpScreenState extends State<OtpScreen> {
       DocumentSnapshot doc = await usersRef.doc(user!.uid).get();
 
       if (!doc.exists) {
-        Navigator.push(
-            this.context, MaterialPageRoute(builder: (context) => LoginUser()));
         usersRef.doc(user.uid).set({
           "uid": user.uid,
         });
         doc = await usersRef.doc(user.uid).get();
       } else {
-        Navigator.push(
-            this.context, MaterialPageRoute(builder: (context) => LoginUser()));
+        print("firestore data exists");
       }
     }
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          title: Center(
-            child: Text("Verify ${widget.countrycode + widget.number}",
-                style: TextStyle(color: Colors.teal[800], fontSize: 16.5)),
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.more_vert, color: Colors.black),
-            )
-          ]),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Center(
+          child: Text("Verify ${widget.countrycode + widget.number}",
+              style: TextStyle(color: Colors.teal[800], fontSize: 16.5)),
+        ),
+      ),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -114,9 +93,6 @@ class _OtpScreenState extends State<OtpScreen> {
             TextSpan(
                 text: " for the OTP code.",
                 style: TextStyle(color: Colors.black, fontSize: 14.5)),
-            TextSpan(
-                text: " Wrong number?",
-                style: TextStyle(color: Colors.teal[800], fontSize: 14.5)),
           ])),
           SizedBox(
             height: 10,
@@ -144,7 +120,11 @@ class _OtpScreenState extends State<OtpScreen> {
                       .then((value) async {
                     //createUserInSql();
                     createUserInfirestore();
+                    User? user = FirebaseAuth.instance.currentUser;
+                    String username = widget.username;
+                    String uid = user!.uid;
 
+                    doUIDRegister(username, uid);
 /*
                     FirebaseAuth auth = FirebaseAuth.instance;
                     String uid = auth.currentUser!.uid.toString();
@@ -181,7 +161,7 @@ class _OtpScreenState extends State<OtpScreen> {
           Text("Enter the 6 digit code recieved",
               style: TextStyle(color: Colors.grey[500], fontSize: 13.5)),
           SizedBox(
-            height: 20,
+            height: 50,
           ),
           GestureDetector(
             onTap: () async {
@@ -192,13 +172,6 @@ class _OtpScreenState extends State<OtpScreen> {
               Icons.message,
             ),
           ),
-          SizedBox(
-            height: 12,
-          ),
-          Divider(
-            thickness: 1,
-          ),
-          bottomButton("Call again", Icons.call),
         ]),
       ),
     );
@@ -254,5 +227,18 @@ class _OtpScreenState extends State<OtpScreen> {
   void initState() {
     super.initState();
     _verifyPhone();
+  }
+
+  doUIDRegister(String username, String uid) async {
+    var res = await userIDRegister(username, uid);
+    print(res.toString());
+    print(username);
+    print(uid);
+    if (res['sucess']) {
+      Navigator.of(this.context)
+          .push(MaterialPageRoute(builder: (context) => HomeScreen()));
+    } else {
+      Fluttertoast.showToast(msg: 'please try again', textColor: Colors.red);
+    }
   }
 }

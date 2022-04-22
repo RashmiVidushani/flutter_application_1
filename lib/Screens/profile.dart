@@ -14,6 +14,7 @@ class Profile extends StatefulWidget {
     this.sourceChat,
   }) : super(key: key);
   final ChatModel? sourceChat;
+
   @override
   State<Profile> createState() => _ProfileState();
 }
@@ -29,48 +30,6 @@ class _ProfileState extends State<Profile> {
   int popTime = 0;
   @override
   Widget build(BuildContext context) {
-    /*
-    Future setUser() async {
-      setState(() {});
-      var url = "http://192.168.8.228:5000/api/setusers";
-      var response = await http.post(Uri.parse(url), body: {
-        "idsignup": user!.uid,
-        "signupusername": _username.text.toString(),
-        "signupbio": _bio.text.toString(),
-      });
-      var message = jsonDecode(response.body);
-      if (message == "true") {
-        print("Successful " + message);
-      } else {
-        print("Error: " + message);
-      }
-    }*/
-
-    /*
-   String uid= widget.sourceChat!.id!.toString();
-    setUsers(String uid, String username, String bio) {
-      ChatModel chatModel = ChatModel(
-         ,
-      );
-    }
-
-    void setUser(String username, String uid, String bio) async {
-      for (int i = 0; i < popTime; i++) {
-        Navigator.pop(context);
-      }
-
-      var request = http.MultipartRequest(
-          "POST", Uri.parse("http://192.168.8.228:5000/api/setusers"));
-      // request.files.add(await http.MultipartFile.fromPath("img", path));
-      request.headers.addAll({
-        "Content-type": "multipart/form-data",
-      });
-      http.StreamedResponse response = await request.send();
-      var httpResponse = await http.Response.fromStream(response);
-      var data = json.decode(httpResponse.body);
-      //print(data['path']);
-    }
-*/
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -113,7 +72,7 @@ class _ProfileState extends State<Profile> {
                   SizedBox(
                     height: 5,
                   ),
-                  bio(),
+                  email(),
                   SizedBox(
                     height: 10,
                   ),
@@ -213,7 +172,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget bio() {
+  Widget email() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 5),
       width: MediaQuery.of(context).size.width / 1,

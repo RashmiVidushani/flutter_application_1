@@ -1,29 +1,32 @@
-//flutter run --no-sound-null-safety
-
-//Flutter Phone Authentication | Implementing Phone Auth Using Flutter & Firebase + Source Code
-
-/*import 'dart:async';
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/NewScreen/login.dart';
-import 'package:flutter_application_1/NewScreen/registration.dart';
+import 'package:flutter_application_1/Entrance/registration.dart';
+import 'package:flutter_application_1/Entrance/country.dart';
+import 'package:flutter_application_1/Model/countrymodel.dart';
+import 'package:flutter_application_1/no/login.dart';
+import 'package:flutter_application_1/NewScreen/otpscreen.dart';
+
 import 'package:flutter_application_1/Screens/homescreen.dart';
 import 'package:flutter_application_1/rest/restapi.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserDetails extends StatefulWidget {
-  UserDetails({Key? key}) : super(key: key);
+class LoginUser extends StatefulWidget {
+  LoginUser({Key? key}) : super(key: key);
 
   @override
-  State<UserDetails> createState() => _UserDetailsState();
+  State<LoginUser> createState() => _UserDetailsState();
 }
 
-class _UserDetailsState extends State<UserDetails> {
-  TextEditingController _username = TextEditingController();
-  TextEditingController _password = TextEditingController();
+class _UserDetailsState extends State<LoginUser> {
+  String countryname = "Sri Lanka";
+  String countrycode = "+94";
+  TextEditingController _phoneController = TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
   late SharedPreferences _sharedPreferences;
 
   @override
@@ -44,7 +47,7 @@ class _UserDetailsState extends State<UserDetails> {
       ),
       body: SingleChildScrollView(
           child: Container(
-        height: MediaQuery.of(context).size.height / 2,
+        height: MediaQuery.of(context).size.height / 1.2,
         width: MediaQuery.of(context).size.width,
         child: Column(
           children: [
@@ -60,8 +63,13 @@ class _UserDetailsState extends State<UserDetails> {
             SizedBox(
               height: 25,
             ),
+            countryCard(),
             SizedBox(
-              height: 25,
+              height: 10,
+            ),
+            number(),
+            SizedBox(
+              height: 10,
             ),
             username(),
             SizedBox(
@@ -88,8 +96,11 @@ class _UserDetailsState extends State<UserDetails> {
                 width: MediaQuery.of(context).size.width / 4,
                 child: ElevatedButton(
                     onPressed: () {
-                      _username.text.isNotEmpty && _password.text.isNotEmpty
-                          ? doLogin(_username.text, _password.text)
+                      _usernameController.text.isNotEmpty &&
+                              _passwordController.text.isNotEmpty &&
+                              _phoneController.text.isNotEmpty
+                          ? doLogin(_usernameController.text,
+                              _passwordController.text, _phoneController.text)
                           : Fluttertoast.showToast(
                               msg: 'All feilds are required',
                               textColor: Colors.red);
@@ -120,28 +131,135 @@ class _UserDetailsState extends State<UserDetails> {
     );
   }
 
-  doLogin(String _username, String _password) async {
+  doLogin(String username, String password, String phone) async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    var res = await userLogin(_username.trim(), _password.trim());
-    print(_password);
-    print(_username);
+    var res = await userLogin(username.trim(), password.trim(), phone.trim());
+    print(res.toString());
+    if (res['sucess']) {
+      String useruserName = res['users'][0]['username'];
+      String userEmail = res['users'][0]['email'];
+      _sharedPreferences.setString('usersemail', userEmail);
+      _sharedPreferences.setString('usersusername', useruserName);
+      Fluttertoast.showToast(msg: 'Login successful');
+      _sharedPreferences = await SharedPreferences.getInstance();
+      Timer(Duration(seconds: 3), () async {
+        if (_sharedPreferences.getString("usersemail") == null &&
+            _sharedPreferences.getString("usersusername") == null) {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => LoginUser()));
+        } else {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => OtpScreen(
+                        countrycode: countrycode,
+                        number: _phoneController.text,
+                        username: _usernameController.text,
+                      )));
+        }
+      });
+    } else {
+      Fluttertoast.showToast(
+          msg: 'Invalid email or password', textColor: Colors.red);
+    }
 
+    /* _sharedPreferences = await SharedPreferences.getInstance();
+    var res = await userLogin(username.trim(), password.trim());
+    print(res.toString());
+    print(password);
+    print(username);
+  String useruserName = res['users'][0]['username'];
+    String userId = res['users'][0]['id'];
     if (_sharedPreferences.getString('username') == null &&
         _sharedPreferences.getString('password') == null) {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => UserDetails()));
+          context, MaterialPageRoute(builder: (context) => LoginUser()));
     } else {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Login()));
     }
     if (res['sucess']) {
-      String _username = res['users'][0]['username'];
-      String _password = res['users'][0]['password'];
-      _sharedPreferences.setString('password', _password);
-      _sharedPreferences.setString('username', _username);
+      String username = res['users'][0]['username'];
+      String password = res['users'][0]['password'];
+      _sharedPreferences.setString('password', password);
+      _sharedPreferences.setString('username', username);
     } else {
       Fluttertoast.showToast(msg: 'Email or the password is not valid');
-    }
+    }*/
+  }
+
+  Widget countryCard() {
+    return InkWell(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (builder) =>
+                      Country(setCountryData: setCountryData)));
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width / 1.5,
+          padding: EdgeInsets.symmetric(vertical: 5),
+          decoration: BoxDecoration(
+              border:
+                  Border(bottom: BorderSide(color: Colors.teal, width: 1.8))),
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                    child: Center(
+                  child: Text(countryname, style: TextStyle(fontSize: 16)),
+                )),
+              ),
+              Icon(
+                Icons.arrow_drop_down,
+                color: Colors.teal,
+                size: 28,
+              )
+            ],
+          ),
+        ));
+  }
+
+  Widget number() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 5),
+      width: MediaQuery.of(context).size.width / 1,
+      height: 50,
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        Container(
+          child: Row(
+            children: [
+              Container(
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  padding: EdgeInsets.symmetric(vertical: 5),
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(color: Colors.teal, width: 1.8))),
+                  child: TextFormField(
+                    textAlign: TextAlign.center,
+                    controller: _phoneController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      border: InputBorder.none,
+                      hintText: "Enter phone number ",
+                      prefix: Text(countrycode),
+                    ),
+                  ))
+            ],
+          ),
+        )
+      ]),
+    );
+  }
+
+  void setCountryData(CountryModel countryModel) {
+    setState(() {
+      countryname = countryModel.name;
+      countrycode = countryModel.code;
+    });
+    Navigator.pop(context);
   }
 
   Widget username() {
@@ -161,7 +279,7 @@ class _UserDetailsState extends State<UserDetails> {
                           bottom: BorderSide(color: Colors.teal, width: 1.8))),
                   child: TextFormField(
                     textAlign: TextAlign.center,
-                    controller: _username,
+                    controller: _usernameController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       isDense: true,
@@ -194,7 +312,7 @@ class _UserDetailsState extends State<UserDetails> {
                   child: TextFormField(
                     textAlign: TextAlign.center,
                     obscureText: true,
-                    controller: _password,
+                    controller: _passwordController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       isDense: true,
@@ -209,43 +327,3 @@ class _UserDetailsState extends State<UserDetails> {
     );
   }
 }
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*router.route('/login').post((req,res)=>{
-
-    const username=req.body.username;
-    const password=req.body.password;
-    
-    var sql ="Select * from users where username=? and  password=?";
-    console.log(username);
-    console.log(password);
-    db.query(sql,[username,password], function(err,data,fields){
-       if(err){
-           res.send(JSON.stringify({sucess:false,message:err}));
-       }else{
-           if(data.length>0){
-               res.send(JSON.stringify({sucess:true,message:data}));
-           }else{
-               res.send(JSON.stringify({sucess:false,message:'no user'}));
-           }
-          
-       }
-    });
-}); */

@@ -1,7 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Screens/termscond.dart';
+import 'package:flutter_application_1/Entrance/terms.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -29,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   route() {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const Termscond()));
+        context, MaterialPageRoute(builder: (context) => const Terms()));
   }
 
   initScreen(BuildContext context) {
@@ -43,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
               "Edu-master",
               style: TextStyle(
                   fontSize: 38,
-                  color: Colors.purple,
+                  color: Colors.teal,
                   fontWeight: FontWeight.w700),
             ),
             Text(
@@ -56,6 +55,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Padding(padding: EdgeInsets.only(top: 20.0)),
             CircularProgressIndicator(
               backgroundColor: Colors.white,
+              color: Colors.green,
               strokeWidth: 1,
             )
           ],

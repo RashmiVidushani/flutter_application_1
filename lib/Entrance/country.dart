@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/NewScreen/countrymodel.dart';
+import 'package:flutter_application_1/Model/countrymodel.dart';
 
 class Country extends StatefulWidget {
   const Country({Key? key, required this.setCountryData}) : super(key: key);

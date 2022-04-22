@@ -18,4 +18,5 @@ class Appcolor {
   static Color barColor = const Color(0xFF454450);
   static Color bar_txtColor = const Color(0xFFFFFFFF);
   static Color iconsColor = const Color(0xFFFFFFFF);
+  static Color green = Color.fromARGB(255, 64, 201, 117);
 }

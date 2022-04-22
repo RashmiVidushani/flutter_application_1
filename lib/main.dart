@@ -1,19 +1,15 @@
 import 'package:camera/camera.dart';
-import 'package:contacts_service/contacts_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/NewScreen/call_screen.dart';
-import 'package:flutter_application_1/NewScreen/landingscreen.dart';
-import 'package:flutter_application_1/NewScreen/login.dart';
-import 'package:flutter_application_1/NewScreen/registration.dart';
-import 'package:flutter_application_1/NewScreen/loginuser.dart';
-import 'package:flutter_application_1/Pages/chatpage.dart';
+import 'package:flutter_application_1/Entrance/loginuser.dart';
+import 'package:flutter_application_1/Entrance/registration.dart';
+import 'package:flutter_application_1/Entrance/splashscreen.dart';
+import 'package:flutter_application_1/Entrance/terms.dart';
 import 'package:flutter_application_1/Screens/camarascreen.dart';
 import 'package:flutter_application_1/Screens/homescreen.dart';
-import 'package:flutter_application_1/Screens/loginscreen.dart';
 import 'package:flutter_application_1/Screens/profile.dart';
 import 'package:flutter_application_1/Screens/selectcontact.dart';
-import 'package:flutter_application_1/Screens/splashscreen.dart';
+import 'package:flutter_application_1/no/loginscreen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,11 +28,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Edu_Master ',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
+        primarySwatch: Colors.teal,
       ),
-      home: Registration(),
-      routes: {'/profile': (context) => const Profile()},
+      home: LoginScreen(),
+      routes: {'/profile': (context) => Profile()},
     );
   }
 }
-//Flutter Chat App- Dynamic Widget Rendering with Help of ListView Builder 🔥 || #6
