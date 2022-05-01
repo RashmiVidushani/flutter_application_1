@@ -35,48 +35,6 @@ class _LoginScreenState extends State<LoginScreen> {
         time: "10:10pm",
         icon: "groups_black_24dp.svg",
         id: 13),
-    /*ChatModel(
-        name: "Ann",
-        isGroup: false,
-        currentMessage: "hi",
-        time: "5:10pm",
-        icon: "person_black_24dp.svg",
-        id: 14),
-    ChatModel(
-        name: "Audrian",
-        isGroup: false,
-        currentMessage: "hi",
-        time: "6:10pm",
-        icon: "person_black_24dp.svg",
-        id: 15),
-    ChatModel(
-        name: "David",
-        isGroup: true,
-        currentMessage: "hi",
-        time: "9:10pm",
-        icon: "groups_black_24dp.svg",
-        id: 16),
-    ChatModel(
-        name: "Dev Stack",
-        isGroup: false,
-        currentMessage: "hi",
-        time: "2:10pm",
-        icon: "person_black_24dp.svg",
-        id: 17),
-    ChatModel(
-        name: "test2",
-        isGroup: false,
-        currentMessage: "hi",
-        time: "5:10pm",
-        icon: "person_black_24dp.svg",
-        id: 2),
-    ChatModel(
-        name: "test3",
-        isGroup: false,
-        currentMessage: "hi",
-        time: "6:10pm",
-        icon: "person_black_24dp.svg",
-        id: 3),*/
   ];
   @override
   Widget build(BuildContext context) {

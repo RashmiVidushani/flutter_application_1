@@ -31,7 +31,7 @@ class _ChatPageState extends State<ChatPage> {
         currentMessage: "hi",
         time: "10:10pm",
         icon: "groups_black_24dp.svg"),
-    /*  ChatModel(
+    ChatModel(
         name: "Ann",
         isGroup: false,
         currentMessage: "hi",
@@ -48,7 +48,7 @@ class _ChatPageState extends State<ChatPage> {
         isGroup: true,
         currentMessage: "hi",
         time: "9:10pm",
-        icon: "groups_black_24dp.svg")*/
+        icon: "groups_black_24dp.svg")
   ];
   @override
   Widget build(BuildContext context) {

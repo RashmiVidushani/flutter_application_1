@@ -5,7 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Model/chatmodel.dart';
 import 'package:flutter_application_1/Screens/homescreen.dart';
+import 'package:flutter_application_1/rest/restapi.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 class Profile extends StatefulWidget {
@@ -26,7 +28,7 @@ class _ProfileState extends State<Profile> {
   User? user = FirebaseAuth.instance.currentUser;
   TextEditingController _username = TextEditingController();
   TextEditingController _bio = TextEditingController();
-  TextEditingController _uid = TextEditingController();
+  TextEditingController _phone = TextEditingController();
   int popTime = 0;
   @override
   Widget build(BuildContext context) {
@@ -64,15 +66,15 @@ class _ProfileState extends State<Profile> {
                   SizedBox(
                     height: 15,
                   ),
-                  userid(),
-                  SizedBox(
-                    height: 5,
-                  ),
                   username(),
                   SizedBox(
                     height: 5,
                   ),
-                  email(),
+                  phone(),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  bio(),
                   SizedBox(
                     height: 10,
                   ),
@@ -85,10 +87,14 @@ class _ProfileState extends State<Profile> {
                         width: 70,
                         child: ElevatedButton(
                             onPressed: () {
-                              //setUser();
-                              //  _updateUser();
-                              _MoveToHome();
-                              _clearAll();
+                              _username.text.isNotEmpty &&
+                                      _phone.text.isNotEmpty &&
+                                      _bio.text.isNotEmpty
+                                  ? doUserDetails(
+                                      _username.text, _phone.text, _bio.text)
+                                  : Fluttertoast.showToast(
+                                      msg: 'all feilds are required',
+                                      textColor: Colors.red);
                             },
                             child: Text("Save")),
                       ),
@@ -98,7 +104,7 @@ class _ProfileState extends State<Profile> {
                         width: 80,
                         child: ElevatedButton(
                             onPressed: () {
-                              _clearAll();
+                              _MoveToHome();
                             },
                             child: Text("Cancel")),
                       ),
@@ -109,36 +115,17 @@ class _ProfileState extends State<Profile> {
         ));
   }
 
-  Widget userid() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 5),
-      width: MediaQuery.of(context).size.width / 1,
-      height: 50,
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        Container(
-          child: Row(
-            children: [
-              Container(
-                  width: MediaQuery.of(context).size.width / 1.5,
-                  padding: EdgeInsets.symmetric(vertical: 5),
-                  decoration: BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(color: Colors.teal, width: 1.8))),
-                  child: TextFormField(
-                    textAlign: TextAlign.center,
-                    controller: _uid,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: widget.sourceChat?.id.toString(),
-                      hintStyle: TextStyle(color: Colors.black26),
-                    ),
-                  ))
-            ],
-          ),
-        )
-      ]),
-    );
+  doUserDetails(String username, String phone, String bio) async {
+    var res = await userDetails(username, phone, bio);
+    print(username);
+    print(phone);
+    print(bio);
+    print(res.toString());
+    if (res['sucess']) {
+      Fluttertoast.showToast(msg: 'Updated', textColor: Colors.red);
+    } else {
+      Fluttertoast.showToast(msg: 'please try again', textColor: Colors.red);
+    }
   }
 
   Widget username() {
@@ -172,7 +159,39 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget email() {
+  Widget phone() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 5),
+      width: MediaQuery.of(context).size.width / 1,
+      height: 40,
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        Container(
+          child: Row(
+            children: [
+              Container(
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  padding: EdgeInsets.symmetric(vertical: 5),
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(color: Colors.teal, width: 1.8))),
+                  child: TextFormField(
+                    textAlign: TextAlign.center,
+                    controller: _phone,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      border: InputBorder.none,
+                      hintText: "Enter your mobile number ",
+                    ),
+                  ))
+            ],
+          ),
+        )
+      ]),
+    );
+  }
+
+  Widget bio() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 5),
       width: MediaQuery.of(context).size.width / 1,
@@ -207,7 +226,6 @@ class _ProfileState extends State<Profile> {
   void _clearAll() {
     _username.text = "";
     _bio.text = "";
-    _uid.text = "";
   }
 
   void _MoveToHome() {

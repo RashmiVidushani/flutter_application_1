@@ -5,6 +5,8 @@ import 'package:flutter_application_1/Entrance/loginuser.dart';
 import 'package:flutter_application_1/Entrance/registration.dart';
 import 'package:flutter_application_1/Entrance/splashscreen.dart';
 import 'package:flutter_application_1/Entrance/terms.dart';
+import 'package:flutter_application_1/Main%20Screen/mainui.dart';
+import 'package:flutter_application_1/Pages/chatpage.dart';
 import 'package:flutter_application_1/Screens/camarascreen.dart';
 import 'package:flutter_application_1/Screens/homescreen.dart';
 import 'package:flutter_application_1/Screens/profile.dart';

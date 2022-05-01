@@ -1,12 +1,14 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/utils/utils.dart';
 import 'package:http/http.dart' as http;
 
-Future userLogin(String username, String password, String trim) async {
+Future userLogin(String username, String password, String phone) async {
   final response = await http.post(Uri.parse('${Utils.baseUrl}/user/login'),
       headers: {"Accept": "Application/json"},
-      body: {'username': username, 'password': password});
+      body: {'username': username, 'password': password, 'phone': phone});
+  print(username);
   var decodedData = jsonDecode(response.body);
   return decodedData;
 }
@@ -36,4 +38,41 @@ Future userIDRegister(String username, String uid) async {
   var decodedData = jsonDecode(response.body);
   return decodedData;
 }
+
 //0785083963
+Future contactdata(String name, bool isGroup, String currentMessage,
+    String time, Blob icon, String uid) async {
+  final response =
+      await http.post(Uri.parse('${Utils.baseUrl}/user/contactdata'), headers: {
+    "Accept": "Application/json"
+  }, body: {
+    'name': name,
+    'isGroup': isGroup,
+    'currentMessage': currentMessage,
+    'time': time,
+    'icon': icon,
+    'uid': uid
+  });
+  var decodedData = jsonDecode(response.body);
+  return decodedData;
+} //setcontact data
+
+Future assigncontact(String name, String uid) async {
+  final response = await http.post(
+      Uri.parse('${Utils.baseUrl}/user/assigncontact'),
+      headers: {"Accept": "Application/json"},
+      body: {'name': name, 'uid': uid});
+  var decodedData = jsonDecode(response.body);
+  return decodedData;
+}
+
+Future userDetails(String username, String phone, String bio) async {
+  final response = await http.put(
+      Uri.parse('${Utils.baseUrl}/user/userDetails'),
+      headers: {"Accept": "Application/json"},
+      body: {'username': username, 'phone': phone, 'bio': bio});
+  print(username);
+  print(bio);
+  var decodedData = jsonDecode(response.body);
+  return decodedData;
+}

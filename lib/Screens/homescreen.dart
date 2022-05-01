@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Model/chatmodel.dart';
 import 'package:flutter_application_1/Pages/call_screen.dart';
 import 'package:flutter_application_1/Screens/profile.dart';
-import 'package:flutter_application_1/screenemp/assignment.dart';
+import 'package:flutter_application_1/screenemp/home.dart';
 import 'package:flutter_application_1/screenemp/camarapage.dart';
 import 'package:flutter_application_1/Pages/chatpage.dart';
 import 'package:flutter_application_1/no/status.dart';
@@ -80,10 +80,10 @@ class _HomeScreenState extends State<HomeScreen>
               icon: Icon(Icons.camera_alt),
             ),
             Tab(
-              text: "CHATS",
+              text: "HOME",
             ),
             Tab(
-              text: "FILES",
+              text: "CHATS",
             ),
             Tab(
               text: "PROFILE",
@@ -93,11 +93,11 @@ class _HomeScreenState extends State<HomeScreen>
       ),
       body: TabBarView(controller: _controller, children: [
         CamaraPage(),
+        Home(),
         ChatPage(
           chats: widget.chats,
           sourceChat: widget.sourceChat,
         ),
-        Assignment(),
         Profile(),
       ]),
     );

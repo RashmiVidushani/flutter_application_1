@@ -7,7 +7,7 @@ import 'package:flutter_application_1/Entrance/registration.dart';
 import 'package:flutter_application_1/Entrance/country.dart';
 import 'package:flutter_application_1/Model/countrymodel.dart';
 import 'package:flutter_application_1/no/login.dart';
-import 'package:flutter_application_1/NewScreen/otpscreen.dart';
+import 'package:flutter_application_1/Entrance/otpscreen.dart';
 
 import 'package:flutter_application_1/Screens/homescreen.dart';
 import 'package:flutter_application_1/rest/restapi.dart';
@@ -135,6 +135,9 @@ class _UserDetailsState extends State<LoginUser> {
     _sharedPreferences = await SharedPreferences.getInstance();
     var res = await userLogin(username.trim(), password.trim(), phone.trim());
     print(res.toString());
+    print(username);
+    print(password);
+    print(phone);
     if (res['sucess']) {
       String useruserName = res['users'][0]['username'];
       String userEmail = res['users'][0]['email'];

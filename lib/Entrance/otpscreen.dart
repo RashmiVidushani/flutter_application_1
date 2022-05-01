@@ -125,6 +125,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     String uid = user!.uid;
 
                     doUIDRegister(username, uid);
+                    doGetChat(username, uid);
 /*
                     FirebaseAuth auth = FirebaseAuth.instance;
                     String uid = auth.currentUser!.uid.toString();
@@ -239,6 +240,16 @@ class _OtpScreenState extends State<OtpScreen> {
           .push(MaterialPageRoute(builder: (context) => HomeScreen()));
     } else {
       Fluttertoast.showToast(msg: 'please try again', textColor: Colors.red);
+    }
+  }
+
+  doGetChat(String name, String uid) async {
+    var res = await assigncontact(name, uid);
+    print(res.toString());
+    if (res['sucess']) {
+      print("success");
+    } else {
+      print("error");
     }
   }
 }
