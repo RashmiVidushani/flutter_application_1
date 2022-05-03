@@ -96,6 +96,10 @@ class _UserDetailsState extends State<LoginUser> {
                 width: MediaQuery.of(context).size.width / 4,
                 child: ElevatedButton(
                     onPressed: () {
+                      if (_phoneController.text.length != 9) {
+                        Fluttertoast.showToast(
+                            msg: 'Recheck phone number', textColor: Colors.red);
+                      }
                       _usernameController.text.isNotEmpty &&
                               _passwordController.text.isNotEmpty &&
                               _phoneController.text.isNotEmpty
@@ -165,30 +169,6 @@ class _UserDetailsState extends State<LoginUser> {
       Fluttertoast.showToast(
           msg: 'Invalid email or password', textColor: Colors.red);
     }
-
-    /* _sharedPreferences = await SharedPreferences.getInstance();
-    var res = await userLogin(username.trim(), password.trim());
-    print(res.toString());
-    print(password);
-    print(username);
-  String useruserName = res['users'][0]['username'];
-    String userId = res['users'][0]['id'];
-    if (_sharedPreferences.getString('username') == null &&
-        _sharedPreferences.getString('password') == null) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LoginUser()));
-    } else {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Login()));
-    }
-    if (res['sucess']) {
-      String username = res['users'][0]['username'];
-      String password = res['users'][0]['password'];
-      _sharedPreferences.setString('password', password);
-      _sharedPreferences.setString('username', username);
-    } else {
-      Fluttertoast.showToast(msg: 'Email or the password is not valid');
-    }*/
   }
 
   Widget countryCard() {

@@ -24,7 +24,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final CollectionReference _users =
       FirebaseFirestore.instance.collection('users');
-
+  late final bool isEdit = false;
   User? user = FirebaseAuth.instance.currentUser;
   TextEditingController _username = TextEditingController();
   TextEditingController _bio = TextEditingController();
@@ -32,17 +32,9 @@ class _ProfileState extends State<Profile> {
   int popTime = 0;
   @override
   Widget build(BuildContext context) {
+    final color = Colors.teal;
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.white,
-          elevation: 0,
-          title: Center(
-            child: Text("User Profile",
-                style: TextStyle(color: Colors.teal[800], fontSize: 16.5)),
-          ),
-        ),
         body: SingleChildScrollView(
           child: Container(
               height: MediaQuery.of(context).size.height,
@@ -51,57 +43,68 @@ class _ProfileState extends State<Profile> {
               child: Column(
                 children: [
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
-                  CircleAvatar(
-                    child: SvgPicture.asset(
-                      "assets/person_black_24dp.svg",
-                      color: Colors.white,
-                      height: 55,
-                      width: 55,
-                    ),
-                    radius: 60,
-                    backgroundColor: Colors.blueGrey,
+                  Stack(
+                    children: [
+                      CircleAvatar(
+                        child: SvgPicture.asset(
+                          "assets/person_black_24dp.svg",
+                          color: Colors.white,
+                          height: 55,
+                          width: 55,
+                        ),
+                        radius: 110,
+                        backgroundColor: Colors.blueGrey,
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 4,
+                        child: buildEditIcon(color),
+                      ),
+                    ],
                   ),
                   SizedBox(
-                    height: 15,
+                    height: 20,
                   ),
                   username(),
                   SizedBox(
-                    height: 5,
+                    height: 15,
                   ),
                   phone(),
                   SizedBox(
-                    height: 5,
+                    height: 15,
                   ),
                   bio(),
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  Column(
                     children: [
                       Container(
                         color: Colors.tealAccent[400],
                         height: 40,
-                        width: 70,
+                        width: MediaQuery.of(context).size.width,
                         child: ElevatedButton(
                             onPressed: () {
-                              _username.text.isNotEmpty &&
-                                      _phone.text.isNotEmpty &&
+                              _phone.text.isNotEmpty &&
+                                      _username.text.isNotEmpty &&
                                       _bio.text.isNotEmpty
-                                  ? doUserDetails(
-                                      _username.text, _phone.text, _bio.text)
+                                  ? doUpdateUser(
+                                      _phone.text, _username.text, _bio.text)
                                   : Fluttertoast.showToast(
                                       msg: 'all feilds are required',
                                       textColor: Colors.red);
                             },
                             child: Text("Save")),
                       ),
+                      SizedBox(
+                        height: 20,
+                      ),
                       Container(
                         color: Colors.tealAccent[400],
                         height: 40,
-                        width: 80,
+                        width: MediaQuery.of(context).size.width,
                         child: ElevatedButton(
                             onPressed: () {
                               _MoveToHome();
@@ -115,112 +118,117 @@ class _ProfileState extends State<Profile> {
         ));
   }
 
-  doUserDetails(String username, String phone, String bio) async {
-    var res = await userDetails(username, phone, bio);
+  doUpdateUser(String phone, String username, String bio) async {
+    var res = await updateuser(phone, username, bio);
     print(username);
-    print(phone);
+
     print(bio);
     print(res.toString());
     if (res['sucess']) {
-      Fluttertoast.showToast(msg: 'Updated', textColor: Colors.red);
+      Fluttertoast.showToast(
+          msg: 'Updated', textColor: Color.fromARGB(255, 54, 244, 54));
     } else {
       Fluttertoast.showToast(msg: 'please try again', textColor: Colors.red);
     }
   }
 
+  Widget buildEditIcon(Color color) => buildCircle(
+        color: Colors.white,
+        all: 3,
+        child: buildCircle(
+          color: color,
+          all: 8,
+          child: Icon(
+            isEdit ? Icons.add_a_photo : Icons.edit,
+            color: Colors.white,
+            size: 30,
+          ),
+        ),
+      );
+  Widget buildCircle({
+    required Widget child,
+    required double all,
+    required Color color,
+  }) =>
+      ClipOval(
+        child: Container(
+          padding: EdgeInsets.all(all),
+          color: color,
+          child: child,
+        ),
+      );
+
   Widget username() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 5),
-      width: MediaQuery.of(context).size.width / 1,
-      height: 50,
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
         Container(
-          child: Row(
-            children: [
-              Container(
-                  width: MediaQuery.of(context).size.width / 1.5,
-                  padding: EdgeInsets.symmetric(vertical: 5),
-                  decoration: BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(color: Colors.teal, width: 1.8))),
-                  child: TextFormField(
-                    textAlign: TextAlign.center,
-                    controller: _username,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Enter username ",
-                    ),
-                  ))
-            ],
-          ),
-        )
+            height: 60,
+            width: MediaQuery.of(context).size.width / 1.3,
+            padding: EdgeInsets.symmetric(vertical: 5),
+            child: TextFormField(
+              textAlign: TextAlign.center,
+              controller: _username,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: "Enter username ",
+              ),
+            ))
       ]),
     );
   }
 
   Widget phone() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 5),
-      width: MediaQuery.of(context).size.width / 1,
-      height: 40,
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
         Container(
-          child: Row(
-            children: [
-              Container(
-                  width: MediaQuery.of(context).size.width / 1.5,
-                  padding: EdgeInsets.symmetric(vertical: 5),
-                  decoration: BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(color: Colors.teal, width: 1.8))),
-                  child: TextFormField(
-                    textAlign: TextAlign.center,
-                    controller: _phone,
-                    keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(
-                      isDense: true,
-                      border: InputBorder.none,
-                      hintText: "Enter your mobile number ",
-                    ),
-                  ))
-            ],
-          ),
-        )
-      ]),
-    );
+            height: 60,
+            width: MediaQuery.of(context).size.width / 1.3,
+            padding: EdgeInsets.symmetric(vertical: 5),
+            child: TextFormField(
+              textAlign: TextAlign.center,
+              controller: _phone,
+              keyboardType: TextInputType.phone,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: "Enter your mobile number ",
+              ),
+            ))
+      ],
+    ));
   }
 
   Widget bio() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 5),
-      width: MediaQuery.of(context).size.width / 1,
-      height: 90,
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        Row(
-          children: [
-            Container(
-                width: MediaQuery.of(context).size.width / 1.5,
-                padding: EdgeInsets.symmetric(vertical: 5),
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(color: Colors.teal, width: 1.8))),
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  controller: _bio,
-                  maxLines: 3,
-                  minLines: 1,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                    isDense: true,
-                    border: InputBorder.none,
-                    hintText: "Say something about you! ",
-                  ),
-                ))
-          ],
-        )
-      ]),
-    );
+        child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Container(
+            height: 60,
+            width: MediaQuery.of(context).size.width / 1.3,
+            padding: EdgeInsets.symmetric(vertical: 5),
+            child: TextFormField(
+              textAlign: TextAlign.center,
+              controller: _bio,
+              maxLines: 3,
+              minLines: 1,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                isDense: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: "Say something about you! ",
+              ),
+            ))
+      ],
+    ));
   }
 
   void _clearAll() {

@@ -66,13 +66,13 @@ Future assigncontact(String name, String uid) async {
   return decodedData;
 }
 
-Future userDetails(String username, String phone, String bio) async {
-  final response = await http.put(
-      Uri.parse('${Utils.baseUrl}/user/userDetails'),
+Future updateuser(String phone, String username, String bio) async {
+  final response = await http.put(Uri.parse('${Utils.baseUrl}/user/UpdateUser'),
       headers: {"Accept": "Application/json"},
-      body: {'username': username, 'phone': phone, 'bio': bio});
+      body: {'phone': phone, 'username': username, 'bio': bio});
   print(username);
   print(bio);
+
   var decodedData = jsonDecode(response.body);
   return decodedData;
 }
