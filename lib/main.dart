@@ -1,17 +1,18 @@
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Entrance/loginuser.dart';
-import 'package:flutter_application_1/Entrance/registration.dart';
-import 'package:flutter_application_1/Entrance/splashscreen.dart';
-import 'package:flutter_application_1/Entrance/terms.dart';
-import 'package:flutter_application_1/Main%20Screen/mainui.dart';
-import 'package:flutter_application_1/Pages/chatpage.dart';
-import 'package:flutter_application_1/Screens/camarascreen.dart';
+import 'package:flutter_application_1/Loginwithemail/home.dart';
+import 'package:flutter_application_1/Loginwithemail/login.dart';
+import 'package:flutter_application_1/Screens/creategroup.dart';
 import 'package:flutter_application_1/Screens/homescreen.dart';
-import 'package:flutter_application_1/Screens/profile.dart';
 import 'package:flutter_application_1/Screens/selectcontact.dart';
 import 'package:flutter_application_1/no/loginscreen.dart';
+import 'package:flutter_application_1/no/loginuser.dart';
+import 'package:flutter_application_1/Entrance/phonenumber.dart';
+import 'package:flutter_application_1/Entrance/splashscreen.dart';
+import 'package:flutter_application_1/Screens/camarascreen.dart';
+import 'package:flutter_application_1/Screens/profile.dart';
+import 'package:flutter_application_1/screenemp/home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),
-      home: Profile(),
+      home: HomeScreen(),
       routes: {'/profile': (context) => Profile()},
     );
   }

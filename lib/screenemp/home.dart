@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Loginwithemail/authentication.dart';
+import 'package:flutter_application_1/Loginwithemail/login.dart';
 import 'package:flutter_application_1/Main%20Screen/special_links.dart';
 import 'package:flutter_application_1/test.dart';
 
@@ -14,40 +16,15 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-          child: GridView.extent(
+          child: Container(
+              child: GridView.extent(
         primary: false,
         padding: const EdgeInsets.symmetric(vertical: 75.0, horizontal: 5.0),
         crossAxisSpacing: 1,
         mainAxisSpacing: 1,
         maxCrossAxisExtent: 200.0,
         children: <Widget>[
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Test()));
-            },
-            child: Container(
-                color: Colors.teal[300],
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
-                height: 30,
-                child: Center(
-                  child: Column(children: const [
-                    SizedBox(
-                      height: 25,
-                    ),
-                    Icon(Icons.assignment, size: 90),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "Assignments",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    )
-                  ]),
-                )),
-          ),
+          Image.asset('assets/convo.png', height: 300, width: 300),
           GestureDetector(
             onTap: () {
               Navigator.push(
@@ -100,8 +77,12 @@ class _HomeState extends State<Home> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Test()));
+              AuthenticationHelper()
+                  .signOut()
+                  .then((_) => Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (contex) => Login()),
+                      ));
             },
             child: Container(
                 color: Colors.teal[200],
@@ -111,12 +92,12 @@ class _HomeState extends State<Home> {
                     SizedBox(
                       height: 25,
                     ),
-                    Icon(Icons.settings, size: 60),
+                    Icon(Icons.logout_sharp, size: 60),
                     SizedBox(
                       height: 10,
                     ),
                     Text(
-                      "Settings",
+                      "Logout",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     )
@@ -124,7 +105,7 @@ class _HomeState extends State<Home> {
                 )),
           ),
         ],
-      )),
+      ))),
     );
   }
 }

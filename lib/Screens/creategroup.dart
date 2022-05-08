@@ -15,15 +15,11 @@ class CreateGroup extends StatefulWidget {
 
 class _CreateGroupState extends State<CreateGroup> {
   List<ChatModel> contacts = [
-    ChatModel(name: "Dev", status: "full stack developer"),
-    ChatModel(name: "kir", status: "full stack developer"),
-    ChatModel(name: "sdd", status: "full stack developer"),
-    ChatModel(name: "De", status: "full stack developer"),
-    ChatModel(name: "ki", status: "full stack developer"),
-    ChatModel(name: "sd", status: "full stack developer"),
-    ChatModel(name: "Dv", status: "full stack developer"),
-    ChatModel(name: "ir", status: "full stack developer"),
-    ChatModel(name: "dd", status: "full stack developer"),
+    ChatModel(name: "Ann", status: "sgdadsfgda"),
+    ChatModel(name: "Jack", status: "sgd"),
+    ChatModel(name: "Dean", status: "sdgsdf"),
+    ChatModel(name: "Sam", status: "sfdfsff"),
+    ChatModel(name: "Bobby", status: "xcbxcbxb"),
   ];
   List<ChatModel> groups = [];
   @override

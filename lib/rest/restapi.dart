@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application_1/Model/usermodel.dart';
 import 'package:flutter_application_1/utils/utils.dart';
 import 'package:http/http.dart' as http;
 

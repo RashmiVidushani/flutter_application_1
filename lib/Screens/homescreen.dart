@@ -2,12 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Model/chatmodel.dart';
 import 'package:flutter_application_1/Pages/call_screen.dart';
+import 'package:flutter_application_1/Screens/editprofile.dart';
 import 'package:flutter_application_1/Screens/profile.dart';
 import 'package:flutter_application_1/screenemp/home.dart';
 import 'package:flutter_application_1/screenemp/camarapage.dart';
 import 'package:flutter_application_1/Pages/chatpage.dart';
 import 'package:flutter_application_1/no/status.dart';
 import 'package:flutter_application_1/no/loginscreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key, this.chats, this.sourceChat}) : super(key: key);
@@ -22,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _controller;
   User? user = FirebaseAuth.instance.currentUser;
+
   @override
   void initState() {
     super.initState();

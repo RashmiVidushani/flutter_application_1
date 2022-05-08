@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Entrance/terms.dart';
+import 'package:flutter_application_1/Loginwithemail/login.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -10,6 +10,11 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final Gradient _gradient = LinearGradient(
+    colors: [Colors.red, Colors.teal],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
   @override
   void initState() {
     super.initState();
@@ -28,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   route() {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const Terms()));
+        context, MaterialPageRoute(builder: (context) => Login()));
   }
 
   initScreen(BuildContext context) {
@@ -36,20 +41,35 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            Padding(padding: EdgeInsets.only(top: 20.0)),
+          children: <Widget>[
+            Image.asset('assets/splash.png', height: 300, width: 300),
+            ShaderMask(
+              blendMode: BlendMode.modulate,
+              shaderCallback: (size) => _gradient.createShader(
+                Rect.fromLTWH(0, 0, size.width, size.height),
+              ),
+              child: Text(
+                "Edu-master",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 38,
+                ),
+              ),
+            ),
+            /*
             Text(
               "Edu-master",
               style: TextStyle(
                   fontSize: 38,
                   color: Colors.teal,
                   fontWeight: FontWeight.w700),
-            ),
+            ),*/
             Text(
               "Your digital School",
               style: TextStyle(
                   fontSize: 15,
-                  color: Color.fromARGB(255, 1, 26, 13),
+                  color: Colors.teal,
                   fontWeight: FontWeight.w700),
             ),
             Padding(padding: EdgeInsets.only(top: 20.0)),

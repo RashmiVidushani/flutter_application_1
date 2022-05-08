@@ -1,6 +1,8 @@
 import 'dart:convert';
 
-import 'package:flutter_application_1/Entrance/loginuser.dart';
+import 'package:flutter_application_1/no/loginuser.dart';
+import 'package:flutter_application_1/Entrance/phonenumber.dart';
+import 'package:flutter_application_1/Entrance/userdetail.dart';
 import 'package:flutter_application_1/Model/chatmodel.dart';
 import 'package:flutter_application_1/rest/restapi.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,31 +11,30 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Screens/homescreen.dart';
-import 'package:flutter_application_1/Screens/profile.dart';
+import 'package:flutter_application_1/Screens/editprofile.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:path/path.dart';
 import 'package:pinput/pin_put/pin_put.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen(
-      {Key? key,
-      required this.number,
-      required this.countrycode,
-      this.sourceChat,
-      required this.username})
-      : super(key: key);
-  final ChatModel? sourceChat;
+  const OtpScreen({
+    Key? key,
+    required this.number,
+    required this.countrycode,
+  }) : super(key: key);
+
   final String number;
   final String countrycode;
-  final String username;
+
   @override
   State<OtpScreen> createState() => _OtpScreenState();
 }
 
 class _OtpScreenState extends State<OtpScreen> {
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
-
+  //late SharedPreferences _sharedPreferences;
   late String _verificationCode;
   final TextEditingController _pinPutController = TextEditingController();
   final FocusNode _pinPutFocusNode = FocusNode();
@@ -43,6 +44,14 @@ class _OtpScreenState extends State<OtpScreen> {
       border: Border.all(
         color: const Color.fromRGBO(126, 203, 224, 1),
       ));
+/*
+  getname() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      username = _sharedPreferences.getString("usersusername")!;
+    });
+  }*/
+
   @override
   Widget build(BuildContext context) {
     createUserInfirestore() async {
@@ -56,33 +65,42 @@ class _OtpScreenState extends State<OtpScreen> {
           "uid": user.uid,
         });
         doc = await usersRef.doc(user.uid).get();
+        Navigator.of(this.context)
+            .push(MaterialPageRoute(builder: (context) => UserDetails()));
       } else {
         print("firestore data exists");
+        Navigator.of(this.context)
+            .push(MaterialPageRoute(builder: (context) => HomeScreen()));
       }
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0,
-        title: Center(
-          child: Text("Verify ${widget.countrycode + widget.number}",
-              style: TextStyle(color: Colors.teal[800], fontSize: 16.5)),
-        ),
-      ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(horizontal: 35),
-        child: Column(children: [
-          SizedBox(
-            height: 10,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Center(
+            child: Text("Check ${widget.countrycode + widget.number}",
+                style: TextStyle(color: Colors.teal[800], fontSize: 16.5)),
           ),
-          RichText(
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.symmetric(horizontal: 35),
+            child: Column(children: [
+              SizedBox(
+                height: 10,
+              ),
+              Image.asset('assets/send_otp.png', height: 300, width: 300),
+              SizedBox(
+                height: 10,
+              ),
+              /* RichText(
               text: TextSpan(children: [
             TextSpan(
-                text: "Check ",
+                text: " Check ",
                 style: TextStyle(color: Colors.black, fontSize: 14.5)),
             TextSpan(
                 text: widget.countrycode + widget.number,
@@ -93,89 +111,67 @@ class _OtpScreenState extends State<OtpScreen> {
             TextSpan(
                 text: " for the OTP code.",
                 style: TextStyle(color: Colors.black, fontSize: 14.5)),
-          ])),
-          SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: PinPut(
-              fieldsCount: 6,
-              textStyle: const TextStyle(fontSize: 25.0, color: Colors.white),
-              eachFieldWidth: 40.0,
-              eachFieldHeight: 55.0,
-              //onSubmit: (String pin) => _showSnackBar(pin),
-              focusNode: _pinPutFocusNode,
-              controller: _pinPutController,
-              submittedFieldDecoration: pinPutDecoration,
-              selectedFieldDecoration: pinPutDecoration,
-              followingFieldDecoration: pinPutDecoration,
-              pinAnimationType: PinAnimationType.fade,
-              onSubmit: (pin) async {
-                /* */
-                try {
-                  await FirebaseAuth.instance
-                      .signInWithCredential(PhoneAuthProvider.credential(
-                          verificationId: _verificationCode, smsCode: pin))
-                      .then((value) async {
-                    //createUserInSql();
-                    createUserInfirestore();
-                    User? user = FirebaseAuth.instance.currentUser;
-                    String username = widget.username;
-                    String uid = user!.uid;
+          ])),*/
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: PinPut(
+                  fieldsCount: 6,
+                  textStyle:
+                      const TextStyle(fontSize: 25.0, color: Colors.white),
+                  eachFieldWidth: 40.0,
+                  eachFieldHeight: 55.0,
+                  //onSubmit: (String pin) => _showSnackBar(pin),
+                  focusNode: _pinPutFocusNode,
+                  controller: _pinPutController,
+                  submittedFieldDecoration: pinPutDecoration,
+                  selectedFieldDecoration: pinPutDecoration,
+                  followingFieldDecoration: pinPutDecoration,
+                  pinAnimationType: PinAnimationType.fade,
+                  onSubmit: (pin) async {
+                    /* */
+                    try {
+                      await FirebaseAuth.instance
+                          .signInWithCredential(PhoneAuthProvider.credential(
+                              verificationId: _verificationCode, smsCode: pin))
+                          .then((value) async {
+                        //createUserInSql();
+                        createUserInfirestore();
+                        /* 
 
                     doUIDRegister(username, uid);
-                    doGetChat(username, uid);
-/*
-                    FirebaseAuth auth = FirebaseAuth.instance;
-                    String uid = auth.currentUser!.uid.toString();
-
-                    if (value.user != null) {
-                      await FirebaseFirestore.instance
-                          .collection('users')
-                          .add({'uid': uid});
-
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UserDetails()),
-                          (route) => false);
-                    } else {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UserDetails()),
-                          (route) => false);
-                    }*/
-                  });
-                } catch (e) {
-                  FocusScope.of(context).unfocus();
-                  _scaffoldkey.currentState!
-                      .showSnackBar(SnackBar(content: Text("invalid")));
-                }
-              },
-            ),
+                    doGetChat(username, uid);*/
+                      });
+                    } catch (e) {
+                      FocusScope.of(context).unfocus();
+                      _scaffoldkey.currentState!
+                          .showSnackBar(SnackBar(content: Text("invalid")));
+                    }
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Text("Enter the 6 digit code recieved",
+                  style: TextStyle(color: Colors.grey[500], fontSize: 13.5)),
+              SizedBox(
+                height: 20,
+              ),
+              GestureDetector(
+                onTap: () async {
+                  _verifyPhone();
+                },
+                child: bottomButton(
+                  "Resend code",
+                  Icons.message,
+                ),
+              ),
+            ]),
           ),
-          SizedBox(
-            height: 15,
-          ),
-          Text("Enter the 6 digit code recieved",
-              style: TextStyle(color: Colors.grey[500], fontSize: 13.5)),
-          SizedBox(
-            height: 50,
-          ),
-          GestureDetector(
-            onTap: () async {
-              _verifyPhone();
-            },
-            child: bottomButton(
-              "Resend code",
-              Icons.message,
-            ),
-          ),
-        ]),
-      ),
-    );
+        ));
   }
 
   Widget bottomButton(String text, IconData icon) {
@@ -205,7 +201,7 @@ class _OtpScreenState extends State<OtpScreen> {
               .signInWithCredential(credential)
               .then((value) async {
             Navigator.push(this.context,
-                MaterialPageRoute(builder: (context) => LoginUser()));
+                MaterialPageRoute(builder: (context) => PhoneNumber()));
           });
         },
         verificationFailed: (FirebaseAuthException e) {
@@ -228,8 +224,9 @@ class _OtpScreenState extends State<OtpScreen> {
   void initState() {
     super.initState();
     _verifyPhone();
+    // getname();
   }
-
+/*
   doUIDRegister(String username, String uid) async {
     var res = await userIDRegister(username, uid);
     print(res.toString());
@@ -242,14 +239,5 @@ class _OtpScreenState extends State<OtpScreen> {
       Fluttertoast.showToast(msg: 'please try again', textColor: Colors.red);
     }
   }
-
-  doGetChat(String name, String uid) async {
-    var res = await assigncontact(name, uid);
-    print(res.toString());
-    if (res['sucess']) {
-      print("success");
-    } else {
-      print("error");
-    }
-  }
+*/
 }

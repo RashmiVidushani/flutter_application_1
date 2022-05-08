@@ -1,3 +1,8 @@
+/*import 'dart:convert';
+
+List<UserModel> postFromJson(String str) =>
+    List<UserModel>.from(json.decode(str).map((x) => UserModel.fromMap(x)));
+
 class UserModel {
   String uid;
   String? username;
@@ -13,13 +18,22 @@ class UserModel {
       bio: map['bio'],
     );
   }
+}
+*/
+class UserModel {
+  final String uid;
+  final String username;
+  final String phone;
+  final String bio;
 
-  // sending data to our server
-  Map<String, dynamic> toMap() {
-    return {
-      'uid': uid,
-      'username': username,
-      'bio': bio,
-    };
+  UserModel(this.uid, this.username, this.phone, this.bio);
+  factory UserModel.fromMap(Map<String, dynamic> json) {
+    return UserModel(json['uid'], json['username'], json['phone'], json['bio']);
   }
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(json['uid'], json['username'], json['phone'], json['bio']);
+  }
+
+  Map<String, dynamic> toJson() =>
+      {'uid': uid, 'username': username, 'phone': phone, 'bio': bio};
 }
