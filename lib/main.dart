@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),
-      home: HomeScreen(),
+      home: SplashScreen(),
       routes: {'/profile': (context) => Profile()},
     );
   }

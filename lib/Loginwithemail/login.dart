@@ -34,7 +34,7 @@ class Login extends StatelessWidget {
           SizedBox(height: 20),
           Row(
             children: <Widget>[
-              SizedBox(width: 80),
+              SizedBox(width: 90),
               GestureDetector(
                 onTap: () {
                   // Navigator.pushNamed(context, '/signup');
@@ -42,7 +42,7 @@ class Login extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => PhoneNumber()));
                 },
                 child: Text('Use Phone Number Instead!',
-                    style: TextStyle(fontSize: 18, color: Colors.teal[400])),
+                    style: TextStyle(fontSize: 16, color: Colors.teal[400])),
               )
             ],
           ),
@@ -59,7 +59,7 @@ class Login extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => Signup()));
                 },
                 child: Text('Get Registered Now!!',
-                    style: TextStyle(fontSize: 18, color: Colors.teal[200])),
+                    style: TextStyle(fontSize: 16, color: Colors.teal[200])),
               )
             ],
           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Loginwithemail/authentication.dart';
 import 'package:flutter_application_1/Loginwithemail/login.dart';
 import 'package:flutter_application_1/Main%20Screen/special_links.dart';
+import 'package:flutter_application_1/no/loginuser.dart';
 import 'package:flutter_application_1/test.dart';
 
 class Home extends StatefulWidget {
@@ -81,7 +82,7 @@ class _HomeState extends State<Home> {
                   .signOut()
                   .then((_) => Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (contex) => Login()),
+                        MaterialPageRoute(builder: (contex) => LoginUser()),
                       ));
             },
             child: Container(
